@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useState,
@@ -8,19 +8,19 @@ import {
   createContext,
   useContext,
   isValidElement,
-} from 'react';
+} from "react";
 import {
   AnimatePresence,
   MotionConfig,
   motion,
-  Transition,
-  Variants,
-} from 'motion/react';
-import useClickOutside from '@/hooks/useClickOutside';
-import { cn } from '@/lib/utils';
+  type Transition,
+  type Variants,
+} from "motion/react";
+import useClickOutside from "@/hooks/useClickOutside";
+import { cn } from "@/lib/utils";
 
-const TRANSITION = {
-  type: 'spring',
+const TRANSITION: Transition = {
+  type: "spring",
   bounce: 0.1,
   duration: 0.4,
 };
@@ -75,7 +75,7 @@ export type MorphingPopoverProps = {
   onOpenChange?: (open: boolean) => void;
   variants?: Variants;
   className?: string;
-} & React.ComponentProps<'div'>;
+} & React.ComponentProps<"div">;
 
 function MorphingPopover({
   children,
@@ -93,7 +93,7 @@ function MorphingPopover({
     <MorphingPopoverContext.Provider value={{ ...popoverLogic, variants }}>
       <MotionConfig transition={transition}>
         <div
-          className={cn('relative flex items-center justify-center', className)}
+          className={cn("relative flex items-center justify-center", className)}
           key={popoverLogic.uniqueId}
           {...props}
         >
@@ -119,13 +119,13 @@ function MorphingPopoverTrigger({
   const context = useContext(MorphingPopoverContext);
   if (!context) {
     throw new Error(
-      'MorphingPopoverTrigger must be used within MorphingPopover'
+      "MorphingPopoverTrigger must be used within MorphingPopover",
     );
   }
 
   if (asChild && isValidElement(children)) {
     const MotionComponent = motion.create(
-      children.type as React.ForwardRefExoticComponent<any>
+      children.type as React.ForwardRefExoticComponent<any>,
     );
     const childProps = children.props as Record<string, unknown>;
 
@@ -175,7 +175,7 @@ function MorphingPopoverContent({
   const context = useContext(MorphingPopoverContext);
   if (!context)
     throw new Error(
-      'MorphingPopoverContent must be used within MorphingPopover'
+      "MorphingPopoverContent must be used within MorphingPopover",
     );
 
   const ref = useRef<HTMLDivElement>(null);
@@ -185,11 +185,11 @@ function MorphingPopoverContent({
     if (!context.isOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') context.close();
+      if (event.key === "Escape") context.close();
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [context.isOpen, context.close]);
 
   return (
@@ -202,15 +202,15 @@ function MorphingPopoverContent({
             layoutId={`popover-trigger-${context.uniqueId}`}
             key={context.uniqueId}
             id={`popover-content-${context.uniqueId}`}
-            role='dialog'
-            aria-modal='true'
+            role="dialog"
+            aria-modal="true"
             className={cn(
-              'absolute overflow-hidden rounded-md border border-zinc-950/10 bg-white p-2 text-zinc-950 shadow-md dark:border-zinc-50/10 dark:bg-zinc-700 dark:text-zinc-50',
-              className
+              "absolute overflow-hidden rounded-md border border-zinc-950/10 bg-white p-2 text-zinc-950 shadow-md dark:border-zinc-50/10 dark:bg-zinc-700 dark:text-zinc-50",
+              className,
             )}
-            initial='initial'
-            animate='animate'
-            exit='exit'
+            initial="initial"
+            animate="animate"
+            exit="exit"
             variants={context.variants}
           >
             {children}

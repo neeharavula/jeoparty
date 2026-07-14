@@ -1,4 +1,9 @@
 import { useState } from "react";
+import {
+  MorphingPopover,
+  MorphingPopoverContent,
+  MorphingPopoverTrigger,
+} from "@/components/motion-primitives/morphing-popover";
 
 /* base for all question types */
 type BaseQuestion = {
@@ -59,6 +64,9 @@ function initBoard(): CategoryDraft[] {
 /* setup page */
 function SetupPage() {
   const [categories, setCategories] = useState<CategoryDraft[]>(initBoard);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
+    null,
+  );
 
   /* edit category*/
   function editCategory(categoryId: string, newName: string) {
@@ -83,12 +91,25 @@ function SetupPage() {
               }
             />
             {category.questions.map((question) => (
-              <div
+              <MorphingPopover
                 key={question.id}
-                className="bg-[#dcdcdc] p-5 rounded-[10px]"
+                open={editingQuestionId === question.id}
+                onOpenChange={(isOpen) =>
+                  setEditingQuestionId(isOpen ? question.id : null)
+                }
               >
-                {question.points}
-              </div>
+                <MorphingPopoverTrigger asChild>
+                  <div className="bg-[#dcdcdc] p-5 rounded-[10px]  w-full">
+                    {question.points}
+                  </div>
+                </MorphingPopoverTrigger>
+                <MorphingPopoverContent className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+                  <p>form goes here</p>
+                  <button onClick={() => setEditingQuestionId(null)}>
+                    Save
+                  </button>
+                </MorphingPopoverContent>
+              </MorphingPopover>
             ))}
           </div>
         ))}
