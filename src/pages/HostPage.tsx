@@ -76,7 +76,9 @@ function HostPage() {
 
       {game.status === "in_progress" && revealed && (
         <div>
-          <p>{revealed.category.name}</p>
+          <p>
+            {revealed.category.name} {revealed.question.points}
+          </p>
           <p>{revealed.question.prompt}</p>
           <p>{secondsLeft}s</p>
         </div>

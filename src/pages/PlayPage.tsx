@@ -19,6 +19,30 @@ function PlayPage() {
     : null;
   const secondsLeft = useCountdown(revealed?.question.revealed_at, 30);
 
+  const [myAnswer, setMyAnswer] = useState<string | null>(null);
+  const [freeTextInput, setFreeTextInput] = useState("");
+
+  useEffect(() => {
+    setMyAnswer(null);
+    setFreeTextInput("");
+  }, [revealed?.question.id]);
+
+  async function submitAnswer(answerText: string) {
+    if (!revealed || !player) return;
+
+    await supabase.from("submissions").upsert(
+      {
+        question_id: revealed.question.id,
+        player_id: player.id,
+        answer_text: answerText,
+        submitted_at: new Date().toISOString(),
+      },
+      { onConflict: "question_id,player_id" },
+    );
+
+    setMyAnswer(answerText);
+  }
+
   useEffect(() => {
     if (!game?.id) return;
     const stored = localStorage.getItem(`jeoparty-player-${game.id}`);
@@ -79,9 +103,44 @@ function PlayPage() {
       )}
       {game.status === "in_progress" && revealed && (
         <div>
-          <p>{revealed.category.name}</p>
+          <p>
+            {revealed.category.name} {revealed.question.points}
+          </p>
           <p>{revealed.question.prompt}</p>
           <p>{secondsLeft}s</p>
+
+          {revealed.question.question_type === "multiple_choice" ? (
+            <div>
+              {revealed.question.choices.map(
+                (choice: string, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => submitAnswer(choice)}
+                    disabled={secondsLeft === 0}
+                  >
+                    {choice}
+                    {myAnswer === choice ? " (selected)" : ""}
+                  </button>
+                ),
+              )}
+            </div>
+          ) : (
+            <div>
+              <input
+                value={freeTextInput}
+                onChange={(event) => setFreeTextInput(event.target.value)}
+                disabled={secondsLeft === 0}
+              />
+              <button
+                onClick={() => submitAnswer(freeTextInput)}
+                disabled={secondsLeft === 0}
+              >
+                Submit
+              </button>
+            </div>
+          )}
+
+          {myAnswer && <p>Answer locked in!</p>}
         </div>
       )}
     </div>
