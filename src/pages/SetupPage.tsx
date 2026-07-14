@@ -85,7 +85,17 @@ function SetupPage() {
     null,
   );
   const [isGenerating, setIsGenerating] = useState(false);
-  const [gameLinks, setGameLinks] = useState<GameLinks | null>(null);
+  const [gameLinks, setGameLinks] = useState<GameLinks | null>(() => {
+    const stored = localStorage.getItem("jeoparty-game-links");
+    return stored ? JSON.parse(stored) : null;
+  });
+  const [copiedLink, setCopiedLink] = useState<string | null>(null);
+
+  function copyLink(url: string) {
+    navigator.clipboard.writeText(url);
+    setCopiedLink(url);
+    setTimeout(() => setCopiedLink(null), 1500);
+  }
 
   async function generateGame() {
     setIsGenerating(true);
@@ -138,11 +148,13 @@ function SetupPage() {
     }
 
     const origin = window.location.origin;
-    setGameLinks({
+    const links = {
       play: `${origin}/play/${roomCode}`,
       host: `${origin}/host/${roomCode}`,
       display: `${origin}/display/${roomCode}`,
-    });
+    };
+    setGameLinks(links);
+    localStorage.setItem("jeoparty-game-links", JSON.stringify(links));
     setIsGenerating(false);
   }
 
@@ -208,6 +220,7 @@ function SetupPage() {
           <div key={category.id} className="flex flex-col gap-3 w-40">
             <input
               className="bg-[#a6c5d2] p-2.5 rounded-[10px] border-none font-mono text-sm text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
+              placeholder="Category"
               value={category.name}
               onChange={(event) =>
                 editCategory(category.id, event.target.value)
@@ -349,13 +362,25 @@ function SetupPage() {
             Play:{" "}
             <a href={gameLinks.play} target="_blank" rel="noopener noreferrer">
               {gameLinks.play}
-            </a>
+            </a>{" "}
+            <button
+              className="cursor-pointer text-xs text-gray-400"
+              onClick={() => copyLink(gameLinks.play)}
+            >
+              {copiedLink === gameLinks.play ? "Copied!" : "Copy"}
+            </button>
           </p>
           <p>
             Host:{" "}
             <a href={gameLinks.host} target="_blank" rel="noopener noreferrer">
               {gameLinks.host}
-            </a>
+            </a>{" "}
+            <button
+              className="cursor-pointer text-xs text-gray-400"
+              onClick={() => copyLink(gameLinks.host)}
+            >
+              {copiedLink === gameLinks.host ? "Copied!" : "Copy"}
+            </button>
           </p>
           <p>
             Display:{" "}
@@ -365,7 +390,13 @@ function SetupPage() {
               rel="noopener noreferrer"
             >
               {gameLinks.display}
-            </a>
+            </a>{" "}
+            <button
+              className="cursor-pointer text-xs text-gray-400"
+              onClick={() => copyLink(gameLinks.display)}
+            >
+              {copiedLink === gameLinks.display ? "Copied!" : "Copy"}
+            </button>
           </p>
         </div>
       )}
