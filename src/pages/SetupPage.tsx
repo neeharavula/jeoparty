@@ -108,7 +108,7 @@ function SetupPage() {
           points: question.points,
           prompt: question.prompt,
           questionType: "multiple_choice",
-          choices: ["", ""],
+          choices: ["", "", "", ""],
           correctAnswer: "",
         };
       }
@@ -146,31 +146,102 @@ function SetupPage() {
                 <DialogTrigger className="bg-[#dcdcdc] p-5 rounded-[10px] w-full">
                   {question.points}
                 </DialogTrigger>
-                <DialogContent>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      selectQuestionType(category.id, question.id, "free_text")
-                    }
-                  >
-                    Free text
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      selectQuestionType(
-                        category.id,
-                        question.id,
-                        "multiple_choice",
-                      )
-                    }
-                  >
-                    Multiple choice
-                  </button>
+                <DialogContent className="font-mono text-xs p-5 w-96">
+                  <div className="flex flex-col gap-3">
+                    <p className="text-center">
+                      {category.name || "Untitled"} {question.points}
+                    </p>
+                    <label className="text-gray-400 text-xs">Type</label>
+                    <select
+                      value={question.questionType}
+                      onChange={(event) =>
+                        selectQuestionType(
+                          category.id,
+                          question.id,
+                          event.target.value as "multiple_choice" | "free_text",
+                        )
+                      }
+                    >
+                      <option value="free_text">Text</option>
+                      <option value="multiple_choice">Multiple Choice</option>
+                    </select>
 
-                  <button onClick={() => setEditingQuestionId(null)}>
-                    Save
-                  </button>
+                    <label className="text-gray-400 text-xs">Question</label>
+                    <textarea
+                      value={question.prompt}
+                      onChange={(event) =>
+                        updateQuestion(category.id, question.id, (q) => ({
+                          ...q,
+                          prompt: event.target.value,
+                        }))
+                      }
+                    />
+
+                    {question.questionType === "free_text" ? (
+                      <>
+                        <label className="text-gray-400 text-xs">Answer</label>
+                        <textarea
+                          value={question.correctAnswer}
+                          onChange={(event) =>
+                            updateQuestion(category.id, question.id, (q) => ({
+                              ...q,
+                              correctAnswer: event.target.value,
+                            }))
+                          }
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <label className="text-gray-400 text-xs">Options</label>
+                        {question.choices.map((choice, index) => (
+                          <div key={index} className="flex gap-2">
+                            <input
+                              type="radio"
+                              name={`correct-${question.id}`}
+                              checked={choice === question.correctAnswer}
+                              onChange={() =>
+                                updateQuestion(category.id, question.id, (q) =>
+                                  q.questionType !== "multiple_choice"
+                                    ? q
+                                    : { ...q, correctAnswer: choice },
+                                )
+                              }
+                            />
+                            <textarea
+                              className="flex-1"
+                              value={choice}
+                              onChange={(event) =>
+                                updateQuestion(
+                                  category.id,
+                                  question.id,
+                                  (q) => {
+                                    if (q.questionType !== "multiple_choice")
+                                      return q;
+                                    const wasCorrect =
+                                      q.choices[index] === q.correctAnswer;
+                                    const newChoices = q.choices.map((c, i) =>
+                                      i === index ? event.target.value : c,
+                                    );
+                                    return {
+                                      ...q,
+                                      choices: newChoices,
+                                      correctAnswer: wasCorrect
+                                        ? event.target.value
+                                        : q.correctAnswer,
+                                    };
+                                  },
+                                )
+                              }
+                            />
+                          </div>
+                        ))}
+                      </>
+                    )}
+
+                    <button onClick={() => setEditingQuestionId(null)}>
+                      Save
+                    </button>
+                  </div>
                 </DialogContent>
               </Dialog>
             ))}
