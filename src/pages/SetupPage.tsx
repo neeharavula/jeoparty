@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/motion-primitives/dialog";
+import { supabase } from "@/lib/supabaseClient";
 
 /* base for all question types */
 type BaseQuestion = {
@@ -61,12 +62,89 @@ function initBoard(): CategoryDraft[] {
   return Array.from({ length: 5 }, () => createEmptyCategory());
 }
 
+/* generate a short room code, avoiding visually ambiguous characters */
+function generateRoomCode(): string {
+  const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 6; i++) {
+    code += characters[Math.floor(Math.random() * characters.length)];
+  }
+  return code;
+}
+
+type GameLinks = {
+  play: string;
+  host: string;
+  display: string;
+};
+
 /* setup page */
 function SetupPage() {
   const [categories, setCategories] = useState<CategoryDraft[]>(initBoard);
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
     null,
   );
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [gameLinks, setGameLinks] = useState<GameLinks | null>(null);
+
+  async function generateGame() {
+    setIsGenerating(true);
+    const roomCode = generateRoomCode();
+
+    const { data: game, error: gameError } = await supabase
+      .from("games")
+      .insert({ room_code: roomCode, status: "setup" })
+      .select()
+      .single();
+
+    if (gameError || !game) {
+      console.error(gameError);
+      setIsGenerating(false);
+      return;
+    }
+
+    for (const [index, category] of categories.entries()) {
+      const { data: categoryRow, error: categoryError } = await supabase
+        .from("categories")
+        .insert({ game_id: game.id, name: category.name, sort_order: index })
+        .select()
+        .single();
+
+      if (categoryError || !categoryRow) {
+        console.error(categoryError);
+        continue;
+      }
+
+      const questionRows = category.questions.map((question) => ({
+        category_id: categoryRow.id,
+        points: question.points,
+        prompt: question.prompt,
+        question_type: question.questionType,
+        choices:
+          question.questionType === "multiple_choice"
+            ? question.choices
+            : null,
+        correct_answer: question.correctAnswer,
+        state: "unplayed",
+      }));
+
+      const { error: questionsError } = await supabase
+        .from("questions")
+        .insert(questionRows);
+
+      if (questionsError) {
+        console.error(questionsError);
+      }
+    }
+
+    const origin = window.location.origin;
+    setGameLinks({
+      play: `${origin}/play/${roomCode}`,
+      host: `${origin}/host/${roomCode}`,
+      display: `${origin}/display/${roomCode}`,
+    });
+    setIsGenerating(false);
+  }
 
   /* edit category*/
   function editCategory(categoryId: string, newName: string) {
@@ -127,7 +205,7 @@ function SetupPage() {
       <h1>setup</h1>
       <div className="flex justify-center gap-4 font-mono text-sm">
         {categories.map((category) => (
-          <div key={category.id} className="flex flex-col gap-3 w-30">
+          <div key={category.id} className="flex flex-col gap-3 w-40">
             <input
               className="bg-[#a6c5d2] p-2.5 rounded-[10px] border-none font-mono text-sm text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
               value={category.name}
@@ -243,7 +321,10 @@ function SetupPage() {
                       </>
                     )}
 
-                    <button onClick={() => setEditingQuestionId(null)}>
+                    <button
+                      className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer"
+                      onClick={() => setEditingQuestionId(null)}
+                    >
                       Save
                     </button>
                   </div>
@@ -253,6 +334,41 @@ function SetupPage() {
           </div>
         ))}
       </div>
+
+      <button
+        className="bg-[#6b93a6] text-white rounded-[10px] p-3 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono"
+        onClick={generateGame}
+        disabled={isGenerating}
+      >
+        {isGenerating ? "Generating..." : "Generate Game"}
+      </button>
+
+      {gameLinks && (
+        <div className="flex flex-col gap-2 text-center font-mono text-sm">
+          <p>
+            Play:{" "}
+            <a href={gameLinks.play} target="_blank" rel="noopener noreferrer">
+              {gameLinks.play}
+            </a>
+          </p>
+          <p>
+            Host:{" "}
+            <a href={gameLinks.host} target="_blank" rel="noopener noreferrer">
+              {gameLinks.host}
+            </a>
+          </p>
+          <p>
+            Display:{" "}
+            <a
+              href={gameLinks.display}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {gameLinks.display}
+            </a>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
