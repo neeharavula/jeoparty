@@ -1,12 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { usePlayers } from "@/hooks/usePlayers";
+import { useBoard } from "@/hooks/useBoard";
 import { supabase } from "@/lib/supabaseClient";
+import Board from "@/components/board";
 
 function HostPage() {
   const { roomCode } = useParams();
   const { game, loading } = useGame(roomCode);
   const players = usePlayers(game?.id);
+  const categories = useBoard(game?.id);
 
   async function startGame() {
     await supabase
@@ -41,7 +44,16 @@ function HostPage() {
         </>
       )}
 
-      {game.status === "in_progress" && <p>Game in progress...</p>}
+      {game.status === "in_progress" && !game.current_question_id && (
+        <>
+          <p>Pick next question to reveal</p>
+          <Board categories={categories} size="compact" />
+        </>
+      )}
+
+      {game.status === "in_progress" && game.current_question_id && (
+        <p>Question revealed (next step)</p>
+      )}
     </div>
   );
 }
