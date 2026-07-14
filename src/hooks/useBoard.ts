@@ -12,7 +12,8 @@ export function useBoard(gameId: string | undefined) {
         .from("categories")
         .select("*, questions(*)")
         .eq("game_id", gameId)
-        .order("sort_order");
+        .order("sort_order")
+        .order("points", { referencedTable: "questions" });
       setCategories(data ?? []);
     }
 
