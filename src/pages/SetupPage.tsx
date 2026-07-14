@@ -60,13 +60,29 @@ function initBoard(): CategoryDraft[] {
 /* setup page */
 function SetupPage() {
   const [categories, setCategories] = useState<CategoryDraft[]>(initBoard);
+
+  /* edit category*/
+  function editCategory(categoryId: string, newName: string) {
+    setCategories((prevCategories) =>
+      prevCategories.map((category) =>
+        category.id === categoryId ? { ...category, name: newName } : category,
+      ),
+    );
+  }
+
   return (
     <div className="setup-page">
       <h1>setup</h1>
       <div className="board">
         {categories.map((category) => (
           <div key={category.id} className="category-column">
-            <div className="category-header">{category.name}</div>
+            <input
+              className="category-header"
+              value={category.name}
+              onChange={(event) =>
+                editCategory(category.id, event.target.value)
+              }
+            />
             {category.questions.map((question) => (
               <div key={question.id} className="question-card">
                 {question.points}

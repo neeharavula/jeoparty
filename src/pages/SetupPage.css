@@ -19,16 +19,21 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 120px;
 }
 
 .category-header {
   background-color: rgb(166, 197, 210);
-  padding: 20px 40px;
+  padding: 10px;
   border-radius: 10px;
+  border: none;
+  font-family: var(--mono);
+  font-size: small;
+  text-align: center;
 }
 
 .question-card {
   background-color: rgb(220, 220, 220);
-  padding: 20px 40px;
+  padding: 20px;
   border-radius: 10px;
 }
