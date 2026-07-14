@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { usePlayers } from "@/hooks/usePlayers";
@@ -21,11 +21,64 @@ function HostPage() {
   const secondsLeft = useCountdown(revealed?.question.revealed_at, 30);
   const submissions = useSubmissions(revealed?.question.id);
 
+  const [markedCorrect, setMarkedCorrect] = useState<Set<string>>(new Set());
+  const hasEndedRound = useRef(false);
+
   useEffect(() => {
-    if (secondsLeft === 0 && revealed?.question.state === "revealed") {
+    setMarkedCorrect(new Set());
+    hasEndedRound.current = false;
+  }, [revealed?.question.id]);
+
+  useEffect(() => {
+    if (!revealed || revealed.question.state !== "revealed") return;
+    if (hasEndedRound.current) return;
+
+    const allSubmitted =
+      players.length > 0 && submissions.length >= players.length;
+
+    if (secondsLeft === 0 || allSubmitted) {
+      hasEndedRound.current = true;
       handleTimerExpiry();
     }
-  }, [secondsLeft]);
+  }, [secondsLeft, submissions.length, players.length, revealed?.question.state]);
+
+  function toggleCorrect(submissionId: string) {
+    setMarkedCorrect((prev) => {
+      const next = new Set(prev);
+      if (next.has(submissionId)) {
+        next.delete(submissionId);
+      } else {
+        next.add(submissionId);
+      }
+      return next;
+    });
+  }
+
+  async function submitJudging() {
+    if (!revealed) return;
+    const question = revealed.question;
+
+    for (const submission of submissions) {
+      await supabase
+        .from("submissions")
+        .update({ is_correct: markedCorrect.has(submission.id) })
+        .eq("id", submission.id);
+    }
+
+    if (markedCorrect.size > 0) {
+      const pointsEach = question.points / markedCorrect.size;
+      for (const submission of submissions) {
+        if (markedCorrect.has(submission.id)) {
+          await awardPoints(submission.player_id, pointsEach);
+        }
+      }
+    }
+
+    await supabase
+      .from("questions")
+      .update({ state: "answered" })
+      .eq("id", question.id);
+  }
 
   async function awardPoints(playerId: string, amount: number) {
     const { data: playerRow } = await supabase
@@ -164,7 +217,19 @@ function HostPage() {
           )}
 
           {revealed.question.state === "judging" && (
-            <p>Judging free text answers... (next step)</p>
+            <div>
+              {submissions.map((submission) => (
+                <label key={submission.id}>
+                  <input
+                    type="checkbox"
+                    checked={markedCorrect.has(submission.id)}
+                    onChange={() => toggleCorrect(submission.id)}
+                  />
+                  {playerName(submission.player_id)}: {submission.answer_text}
+                </label>
+              ))}
+              <button onClick={submitJudging}>Submit Judging</button>
+            </div>
           )}
 
           {revealed.question.state === "answered" && (
