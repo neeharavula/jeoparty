@@ -52,31 +52,43 @@ function DisplayPage() {
   return (
     <div>
       {game.status === "in_progress" && !game.current_question_id && (
-        <Board categories={categories} size="full" />
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-center pt-4">Jeoparty</h1>
+          <Board categories={categories} size="full" />
+          <p className="mt-6">Choosing next question...</p>
+        </div>
       )}
 
       {game.status === "in_progress" && revealed && (
-        <div>
-          <p>
-            {revealed.category.name || "Untitled"} {revealed.question.points}
-          </p>
-          <p>{revealed.question.prompt}</p>
+        <div className="min-h-screen flex flex-col">
+          <h1 className="text-center pt-4">Jeoparty</h1>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2">
+          <div className="bg-[#dcdcdc] rounded-[10px] p-5 shadow-sm text-center mx-4">
+            <p>
+              {revealed.category.name || "Untitled"} {revealed.question.points}
+            </p>
+            <h2 className="text-center">{revealed.question.prompt}</h2>
+          </div>
 
           {revealed.question.state === "revealed" && <p>{secondsLeft}s</p>}
 
           {revealed.question.state === "judging" && (
-            <ul>
-              {submissions.map((submission) => (
-                <li key={submission.id}>
-                  {playerName(submission.player_id)}: {submission.answer_text}
-                </li>
-              ))}
-            </ul>
+            <>
+              <ul>
+                {submissions.map((submission) => (
+                  <li key={submission.id}>
+                    {playerName(submission.player_id)}:{" "}
+                    {submission.answer_text}
+                  </li>
+                ))}
+              </ul>
+              <p>Host is judging...</p>
+            </>
           )}
 
           {revealed.question.state === "answered" && (
             <div>
-              <p>Correct answer: {revealed.question.correct_answer}</p>
+              <h2>Correct answer: {revealed.question.correct_answer}</h2>
               <ul>
                 {submissions
                   .filter((submission) => submission.is_correct)
@@ -88,6 +100,7 @@ function DisplayPage() {
               </ul>
             </div>
           )}
+          </div>
         </div>
       )}
 

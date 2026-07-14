@@ -11,7 +11,7 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
     <div
       className={
         isCompact
-          ? "flex gap-2 font-mono text-xs"
+          ? "flex justify-center gap-1 font-mono text-xs"
           : "flex justify-center gap-4 font-mono text-sm"
       }
     >
@@ -19,13 +19,13 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
         <div
           key={category.id}
           className={
-            isCompact ? "flex flex-col gap-2 flex-1" : "flex flex-col gap-3 w-40"
+            isCompact ? "flex flex-col gap-1" : "flex flex-col gap-3 w-40"
           }
         >
           <div
             className={
               isCompact
-                ? "bg-[#a6c5d2] rounded-[10px] h-8 w-16"
+                ? "bg-[#a6c5d2] rounded-[6px] h-6 w-10"
                 : "bg-[#a6c5d2] p-2.5 rounded-[10px] text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
             }
           >
@@ -39,20 +39,26 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
               onClick={() => onQuestionClick?.(question)}
               className={
                 isCompact
-                  ? `w-16 h-16 rounded-[10px] ${
+                  ? `w-10 h-10 rounded-[6px] ${
                       question.state === "unplayed"
                         ? "bg-[#dcdcdc]"
-                        : "bg-gray-200 opacity-40"
+                        : "bg-gray-200"
                     } ${onQuestionClick ? "cursor-pointer" : ""}`
                   : `p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 ${
                       question.state === "unplayed"
                         ? "bg-[#dcdcdc]"
-                        : "bg-gray-300"
+                        : "bg-gray-200"
                     } ${onQuestionClick ? "cursor-pointer" : ""}`
               }
             >
               {!isCompact && (
-                <span className="font-offbit text-lg tracking-wider">
+                <span
+                  className={`font-offbit text-lg tracking-wider ${
+                    question.state === "unplayed"
+                      ? ""
+                      : "text-gray-300"
+                  }`}
+                >
                   {question.points}
                 </span>
               )}

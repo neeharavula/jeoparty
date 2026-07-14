@@ -124,17 +124,30 @@ function PlayPage() {
   return (
     <div>
       {game.status === "in_progress" && !game.current_question_id && (
-        <>
-          <p>Waiting for the next question...</p>
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-center pt-4">Jeoparty</h1>
           <Board categories={categories} size="compact" />
-        </>
+          <p className="mt-6">Choosing next question...</p>
+        </div>
       )}
       {game.status === "in_progress" && revealed && (
-        <div>
-          <p>
-            {revealed.category.name || "Untitled"} {revealed.question.points}
-          </p>
-          <p>{revealed.question.prompt}</p>
+        <div
+          className={`min-h-screen flex flex-col ${
+            revealed.question.state === "answered"
+              ? mySubmission?.is_correct
+                ? "bg-green-200"
+                : "bg-red-200"
+              : ""
+          }`}
+        >
+          <h1 className="text-center pt-4">Jeoparty</h1>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2">
+          <div className="bg-[#dcdcdc] rounded-[10px] p-5 shadow-sm text-center mx-4">
+            <p>
+              {revealed.category.name || "Untitled"} {revealed.question.points}
+            </p>
+            <h2 className="text-center">{revealed.question.prompt}</h2>
+          </div>
 
           {revealed.question.state === "revealed" && (
             <>
@@ -180,15 +193,22 @@ function PlayPage() {
           {revealed.question.state === "judging" && <p>Host is judging...</p>}
 
           {revealed.question.state === "answered" && (
-            <div>
-              <p>Correct answer: {revealed.question.correct_answer}</p>
-              <p>
+            <div className="text-center">
+              <h2>Correct answer: {revealed.question.correct_answer}</h2>
+              <p
+                className={`text-center ${
+                  mySubmission?.is_correct
+                    ? "text-green-800"
+                    : "text-red-800"
+                }`}
+              >
                 {mySubmission?.is_correct
                   ? "You got it!"
                   : "Better luck next time"}
               </p>
             </div>
           )}
+          </div>
         </div>
       )}
 

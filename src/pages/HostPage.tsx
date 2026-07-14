@@ -41,7 +41,12 @@ function HostPage() {
       hasEndedRound.current = true;
       handleTimerExpiry();
     }
-  }, [secondsLeft, submissions.length, players.length, revealed?.question.state]);
+  }, [
+    secondsLeft,
+    submissions.length,
+    players.length,
+    revealed?.question.state,
+  ]);
 
   useEffect(() => {
     if (game?.status !== "in_progress" || game.current_question_id) return;
@@ -229,61 +234,82 @@ function HostPage() {
   return (
     <div>
       {game.status === "in_progress" && !game.current_question_id && (
-        <>
-          <p>Pick next question to reveal</p>
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-center pt-4">Jeoparty</h1>
           <Board
             categories={categories}
             size="compact"
             onQuestionClick={revealQuestion}
           />
-        </>
+          <p className="mt-6">Pick next question to reveal</p>
+        </div>
       )}
 
       {game.status === "in_progress" && revealed && (
-        <div>
-          <p>
-            {revealed.category.name || "Untitled"} {revealed.question.points}
-          </p>
-          <p>{revealed.question.prompt}</p>
-
-          {revealed.question.state === "revealed" && (
-            <>
-              <p>{secondsLeft}s</p>
-              <p>{submissions.length} submitted</p>
-            </>
-          )}
-
-          {revealed.question.state === "judging" && (
-            <div>
-              {submissions.map((submission) => (
-                <label key={submission.id}>
-                  <input
-                    type="checkbox"
-                    checked={markedCorrect.has(submission.id)}
-                    onChange={() => toggleCorrect(submission.id)}
-                  />
-                  {playerName(submission.player_id)}: {submission.answer_text}
-                </label>
-              ))}
-              <button onClick={submitJudging}>Submit Judging</button>
+        <div className="min-h-screen flex flex-col">
+          <h1 className="text-center pt-4">Jeoparty</h1>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2">
+            <div className="bg-[#dcdcdc] rounded-[10px] p-5 shadow-sm text-center mx-4">
+              <p>
+                {revealed.category.name || "Untitled"}{" "}
+                {revealed.question.points}
+              </p>
+              <h2 className="text-center">{revealed.question.prompt}</h2>
             </div>
-          )}
 
-          {revealed.question.state === "answered" && (
-            <div>
-              <p>Correct answer: {revealed.question.correct_answer}</p>
-              <ul>
-                {submissions
-                  .filter((submission) => submission.is_correct)
-                  .map((submission) => (
-                    <li key={submission.id}>
-                      {playerName(submission.player_id)}
-                    </li>
-                  ))}
-              </ul>
-              <button onClick={nextQuestion}>Next</button>
-            </div>
-          )}
+            {revealed.question.state === "revealed" && (
+              <>
+                <p>{secondsLeft}s</p>
+                <p>{submissions.length} submitted</p>
+              </>
+            )}
+
+            {revealed.question.state === "judging" && (
+              <div>
+                {submissions.map((submission) => (
+                  <label key={submission.id}>
+                    <input
+                      type="checkbox"
+                      checked={markedCorrect.has(submission.id)}
+                      onChange={() => toggleCorrect(submission.id)}
+                    />
+                    {playerName(submission.player_id)}: {submission.answer_text}
+                  </label>
+                ))}
+                <div className="flex justify-center">
+                  <button
+                    className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer mx-4"
+                    onClick={submitJudging}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {revealed.question.state === "answered" && (
+              <div>
+                <h2>Correct answer: {revealed.question.correct_answer}</h2>
+                <ul>
+                  {submissions
+                    .filter((submission) => submission.is_correct)
+                    .map((submission) => (
+                      <li key={submission.id}>
+                        {playerName(submission.player_id)}
+                      </li>
+                    ))}
+                </ul>
+                <div className="flex justify-center">
+                  <button
+                    className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer mx-4"
+                    onClick={nextQuestion}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
