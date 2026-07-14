@@ -8,6 +8,7 @@ import { useSubmissions } from "@/hooks/useSubmissions";
 import { supabase } from "@/lib/supabaseClient";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
+import Leaderboard from "@/components/leaderboard";
 
 function HostPage() {
   const { roomCode } = useParams();
@@ -41,6 +42,21 @@ function HostPage() {
       handleTimerExpiry();
     }
   }, [secondsLeft, submissions.length, players.length, revealed?.question.state]);
+
+  useEffect(() => {
+    if (game?.status !== "in_progress" || game.current_question_id) return;
+    if (categories.length === 0) return;
+
+    const allAnswered = categories.every((category) =>
+      category.questions.every(
+        (question: any) => question.state === "answered",
+      ),
+    );
+
+    if (allAnswered) {
+      supabase.from("games").update({ status: "complete" }).eq("id", game.id);
+    }
+  }, [categories, game?.status, game?.current_question_id]);
 
   function toggleCorrect(submissionId: string) {
     setMarkedCorrect((prev) => {
@@ -249,6 +265,8 @@ function HostPage() {
           )}
         </div>
       )}
+
+      {game.status === "complete" && <Leaderboard players={players} />}
     </div>
   );
 }

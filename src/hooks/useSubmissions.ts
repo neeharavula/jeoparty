@@ -5,6 +5,7 @@ export function useSubmissions(questionId: string | undefined) {
   const [submissions, setSubmissions] = useState<any[]>([]);
 
   useEffect(() => {
+    setSubmissions([]);
     if (!questionId) return;
 
     async function fetchSubmissions() {

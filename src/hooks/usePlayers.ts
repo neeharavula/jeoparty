@@ -32,6 +32,22 @@ export function usePlayers(gameId: string | undefined) {
           setPlayers((prev) => [...prev, payload.new]);
         },
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "players",
+          filter: `game_id=eq.${gameId}`,
+        },
+        (payload) => {
+          setPlayers((prev) =>
+            prev.map((player) =>
+              player.id === payload.new.id ? payload.new : player,
+            ),
+          );
+        },
+      )
       .subscribe();
 
     return () => {

@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
+import { usePlayers } from "@/hooks/usePlayers";
 import { useBoard } from "@/hooks/useBoard";
 import { useCountdown } from "@/hooks/useCountdown";
 import { useSubmissions } from "@/hooks/useSubmissions";
 import { supabase } from "@/lib/supabaseClient";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
+import Leaderboard from "@/components/leaderboard";
 
 function PlayPage() {
   const { roomCode } = useParams();
   const { game, loading } = useGame(roomCode);
+  const players = usePlayers(game?.id);
   const categories = useBoard(game?.id);
   const [name, setName] = useState("");
   const [player, setPlayer] = useState<any | null>(null);
@@ -168,6 +171,8 @@ function PlayPage() {
           )}
         </div>
       )}
+
+      {game.status === "complete" && <Leaderboard players={players} />}
     </div>
   );
 }

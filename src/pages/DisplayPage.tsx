@@ -6,6 +6,7 @@ import { useCountdown } from "@/hooks/useCountdown";
 import { useSubmissions } from "@/hooks/useSubmissions";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
+import Leaderboard from "@/components/leaderboard";
 
 function DisplayPage() {
   const { roomCode } = useParams();
@@ -85,6 +86,8 @@ function DisplayPage() {
           )}
         </div>
       )}
+
+      {game.status === "complete" && <Leaderboard players={players} />}
     </div>
   );
 }
