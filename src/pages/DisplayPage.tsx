@@ -3,6 +3,7 @@ import { useGame } from "@/hooks/useGame";
 import { usePlayers } from "@/hooks/usePlayers";
 import { useBoard } from "@/hooks/useBoard";
 import { useCountdown } from "@/hooks/useCountdown";
+import { useSubmissions } from "@/hooks/useSubmissions";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
 
@@ -16,6 +17,11 @@ function DisplayPage() {
     ? findRevealedQuestion(categories, game.current_question_id)
     : null;
   const secondsLeft = useCountdown(revealed?.question.revealed_at, 30);
+  const submissions = useSubmissions(revealed?.question.id);
+
+  function playerName(playerId: string) {
+    return players.find((player) => player.id === playerId)?.name ?? "?";
+  }
 
   if (loading) {
     return <h1>Loading...</h1>;
@@ -50,7 +56,33 @@ function DisplayPage() {
             {revealed.category.name || "Untitled"} {revealed.question.points}
           </p>
           <p>{revealed.question.prompt}</p>
-          <p>{secondsLeft}s</p>
+
+          {revealed.question.state === "revealed" && <p>{secondsLeft}s</p>}
+
+          {revealed.question.state === "judging" && (
+            <ul>
+              {submissions.map((submission) => (
+                <li key={submission.id}>
+                  {playerName(submission.player_id)}: {submission.answer_text}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {revealed.question.state === "answered" && (
+            <div>
+              <p>Correct answer: {revealed.question.correct_answer}</p>
+              <ul>
+                {submissions
+                  .filter((submission) => submission.is_correct)
+                  .map((submission) => (
+                    <li key={submission.id}>
+                      {playerName(submission.player_id)}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>

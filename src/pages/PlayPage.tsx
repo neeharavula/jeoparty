@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { useBoard } from "@/hooks/useBoard";
 import { useCountdown } from "@/hooks/useCountdown";
+import { useSubmissions } from "@/hooks/useSubmissions";
 import { supabase } from "@/lib/supabaseClient";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
@@ -18,6 +19,10 @@ function PlayPage() {
     ? findRevealedQuestion(categories, game.current_question_id)
     : null;
   const secondsLeft = useCountdown(revealed?.question.revealed_at, 30);
+  const submissions = useSubmissions(revealed?.question.id);
+  const mySubmission = submissions.find(
+    (submission) => submission.player_id === player?.id,
+  );
 
   const [myAnswer, setMyAnswer] = useState<string | null>(null);
   const [freeTextInput, setFreeTextInput] = useState("");
@@ -108,40 +113,57 @@ function PlayPage() {
           </p>
           <p>{revealed.question.prompt}</p>
 
-          {revealed.question.question_type === "multiple_choice" ? (
-            <div>
-              {revealed.question.choices.map(
-                (choice: string, index: number) => (
+          {revealed.question.state === "revealed" && (
+            <>
+              {revealed.question.question_type === "multiple_choice" ? (
+                <div>
+                  {revealed.question.choices.map(
+                    (choice: string, index: number) => (
+                      <button
+                        key={index}
+                        onClick={() => submitAnswer(choice)}
+                        disabled={secondsLeft === 0}
+                      >
+                        {choice}
+                        {myAnswer === choice ? " (selected)" : ""}
+                      </button>
+                    ),
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <input
+                    value={freeTextInput}
+                    onChange={(event) => setFreeTextInput(event.target.value)}
+                    disabled={secondsLeft === 0}
+                  />
                   <button
-                    key={index}
-                    onClick={() => submitAnswer(choice)}
+                    onClick={() => submitAnswer(freeTextInput)}
                     disabled={secondsLeft === 0}
                   >
-                    {choice}
-                    {myAnswer === choice ? " (selected)" : ""}
+                    Submit
                   </button>
-                ),
+                </div>
               )}
-            </div>
-          ) : (
-            <div>
-              <input
-                value={freeTextInput}
-                onChange={(event) => setFreeTextInput(event.target.value)}
-                disabled={secondsLeft === 0}
-              />
-              <button
-                onClick={() => submitAnswer(freeTextInput)}
-                disabled={secondsLeft === 0}
-              >
-                Submit
-              </button>
-            </div>
+
+              <p>{secondsLeft}s</p>
+
+              {myAnswer && <p>Answer locked in!</p>}
+            </>
           )}
 
-          <p>{secondsLeft}s</p>
+          {revealed.question.state === "judging" && <p>Host is judging...</p>}
 
-          {myAnswer && <p>Answer locked in!</p>}
+          {revealed.question.state === "answered" && (
+            <div>
+              <p>Correct answer: {revealed.question.correct_answer}</p>
+              <p>
+                {mySubmission?.is_correct
+                  ? "You got it!"
+                  : "Better luck next time"}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

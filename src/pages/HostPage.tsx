@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { usePlayers } from "@/hooks/usePlayers";
 import { useBoard } from "@/hooks/useBoard";
 import { useCountdown } from "@/hooks/useCountdown";
+import { useSubmissions } from "@/hooks/useSubmissions";
 import { supabase } from "@/lib/supabaseClient";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
@@ -17,6 +19,68 @@ function HostPage() {
     ? findRevealedQuestion(categories, game.current_question_id)
     : null;
   const secondsLeft = useCountdown(revealed?.question.revealed_at, 30);
+  const submissions = useSubmissions(revealed?.question.id);
+
+  useEffect(() => {
+    if (secondsLeft === 0 && revealed?.question.state === "revealed") {
+      handleTimerExpiry();
+    }
+  }, [secondsLeft]);
+
+  async function awardPoints(playerId: string, amount: number) {
+    const { data: playerRow } = await supabase
+      .from("players")
+      .select("score")
+      .eq("id", playerId)
+      .single();
+
+    await supabase
+      .from("players")
+      .update({ score: (playerRow?.score ?? 0) + amount })
+      .eq("id", playerId);
+  }
+
+  async function handleTimerExpiry() {
+    if (!revealed) return;
+    const question = revealed.question;
+
+    if (question.question_type === "multiple_choice") {
+      const { data: submissions } = await supabase
+        .from("submissions")
+        .select()
+        .eq("question_id", question.id);
+
+      const correctSubmissions = (submissions ?? []).filter(
+        (submission: any) => submission.answer_text === question.correct_answer,
+      );
+
+      for (const submission of submissions ?? []) {
+        await supabase
+          .from("submissions")
+          .update({
+            is_correct: submission.answer_text === question.correct_answer,
+          })
+          .eq("id", submission.id);
+      }
+
+      if (correctSubmissions.length > 0) {
+        const pointsEach = question.points / correctSubmissions.length;
+        for (const submission of correctSubmissions) {
+          await awardPoints(submission.player_id, pointsEach);
+        }
+      }
+
+      await supabase
+        .from("questions")
+        .update({ state: "answered" })
+        .eq("id", question.id);
+    } else {
+      await supabase
+        .from("questions")
+        .update({ state: "judging" })
+        .eq("id", question.id);
+    }
+  }
 
   async function startGame() {
     await supabase
@@ -35,6 +99,17 @@ function HostPage() {
       .from("games")
       .update({ current_question_id: question.id })
       .eq("id", game.id);
+  }
+
+  async function nextQuestion() {
+    await supabase
+      .from("games")
+      .update({ current_question_id: null })
+      .eq("id", game.id);
+  }
+
+  function playerName(playerId: string) {
+    return players.find((player) => player.id === playerId)?.name ?? "?";
   }
 
   if (loading) {
@@ -80,7 +155,33 @@ function HostPage() {
             {revealed.category.name || "Untitled"} {revealed.question.points}
           </p>
           <p>{revealed.question.prompt}</p>
-          <p>{secondsLeft}s</p>
+
+          {revealed.question.state === "revealed" && (
+            <>
+              <p>{secondsLeft}s</p>
+              <p>{submissions.length} submitted</p>
+            </>
+          )}
+
+          {revealed.question.state === "judging" && (
+            <p>Judging free text answers... (next step)</p>
+          )}
+
+          {revealed.question.state === "answered" && (
+            <div>
+              <p>Correct answer: {revealed.question.correct_answer}</p>
+              <ul>
+                {submissions
+                  .filter((submission) => submission.is_correct)
+                  .map((submission) => (
+                    <li key={submission.id}>
+                      {playerName(submission.player_id)}
+                    </li>
+                  ))}
+              </ul>
+              <button onClick={nextQuestion}>Next</button>
+            </div>
+          )}
         </div>
       )}
     </div>
