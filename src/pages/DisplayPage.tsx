@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { usePlayers } from "@/hooks/usePlayers";
 import { useBoard } from "@/hooks/useBoard";
+import { useCountdown } from "@/hooks/useCountdown";
+import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
 
 function DisplayPage() {
@@ -9,6 +11,11 @@ function DisplayPage() {
   const { game, loading } = useGame(roomCode);
   const players = usePlayers(game?.id);
   const categories = useBoard(game?.id);
+
+  const revealed = game?.current_question_id
+    ? findRevealedQuestion(categories, game.current_question_id)
+    : null;
+  const secondsLeft = useCountdown(revealed?.question.revealed_at, 30);
 
   if (loading) {
     return <h1>Loading...</h1>;
@@ -37,8 +44,12 @@ function DisplayPage() {
         <Board categories={categories} size="full" />
       )}
 
-      {game.status === "in_progress" && game.current_question_id && (
-        <p>Question revealed (next step)</p>
+      {game.status === "in_progress" && revealed && (
+        <div>
+          <p>{revealed.category.name}</p>
+          <p>{revealed.question.prompt}</p>
+          <p>{secondsLeft}s</p>
+        </div>
       )}
     </div>
   );

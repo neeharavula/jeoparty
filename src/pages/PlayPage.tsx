@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { useBoard } from "@/hooks/useBoard";
+import { useCountdown } from "@/hooks/useCountdown";
 import { supabase } from "@/lib/supabaseClient";
+import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
 
 function PlayPage() {
@@ -11,6 +13,11 @@ function PlayPage() {
   const categories = useBoard(game?.id);
   const [name, setName] = useState("");
   const [player, setPlayer] = useState<any | null>(null);
+
+  const revealed = game?.current_question_id
+    ? findRevealedQuestion(categories, game.current_question_id)
+    : null;
+  const secondsLeft = useCountdown(revealed?.question.revealed_at, 30);
 
   useEffect(() => {
     if (!game?.id) return;
@@ -70,8 +77,12 @@ function PlayPage() {
           <Board categories={categories} size="compact" />
         </>
       )}
-      {game.status === "in_progress" && game.current_question_id && (
-        <p>Question revealed (next step)</p>
+      {game.status === "in_progress" && revealed && (
+        <div>
+          <p>{revealed.category.name}</p>
+          <p>{revealed.question.prompt}</p>
+          <p>{secondsLeft}s</p>
+        </div>
       )}
     </div>
   );
