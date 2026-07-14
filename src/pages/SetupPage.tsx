@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./SetupPage.css";
 
 /* base for all question types */
 type BaseQuestion = {
@@ -71,20 +70,23 @@ function SetupPage() {
   }
 
   return (
-    <div className="setup-page">
+    <div className="min-h-screen flex flex-col items-center gap-5">
       <h1>setup</h1>
-      <div className="board">
+      <div className="flex justify-center gap-5 font-mono text-sm">
         {categories.map((category) => (
-          <div key={category.id} className="category-column">
+          <div key={category.id} className="flex flex-col gap-5 w-30">
             <input
-              className="category-header"
+              className="bg-[#a6c5d2] p-2.5 rounded-[10px] border-none font-mono text-sm text-center"
               value={category.name}
               onChange={(event) =>
                 editCategory(category.id, event.target.value)
               }
             />
             {category.questions.map((question) => (
-              <div key={question.id} className="question-card">
+              <div
+                key={question.id}
+                className="bg-[#dcdcdc] p-5 rounded-[10px]"
+              >
                 {question.points}
               </div>
             ))}
