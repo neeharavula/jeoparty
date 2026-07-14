@@ -31,16 +31,6 @@ function HostPage() {
   }, [revealed?.question.id]);
 
   useEffect(() => {
-    console.log("[check-effect]", {
-      revealedId: revealed?.question.id,
-      revealedType: revealed?.question.question_type,
-      revealedState: revealed?.question.state,
-      secondsLeft,
-      submissionsLength: submissions.length,
-      playersLength: players.length,
-      hasEndedRound: hasEndedRound.current,
-    });
-
     if (!revealed || revealed.question.state !== "revealed") return;
     if (hasEndedRound.current) return;
 
@@ -48,9 +38,6 @@ function HostPage() {
       players.length > 0 && submissions.length >= players.length;
 
     if (secondsLeft === 0 || allSubmitted) {
-      console.log("[check-effect] ENDING ROUND for", revealed.question.id, {
-        reason: secondsLeft === 0 ? "timer" : "allSubmitted",
-      });
       hasEndedRound.current = true;
       handleTimerExpiry();
     }
@@ -125,10 +112,6 @@ function HostPage() {
   async function handleTimerExpiry() {
     if (!revealed) return;
     const question = revealed.question;
-    console.log("[handleTimerExpiry] running for", question.id, {
-      questionType: question.question_type,
-      questionState: question.state,
-    });
 
     if (question.question_type === "multiple_choice") {
       const { data: submissions } = await supabase

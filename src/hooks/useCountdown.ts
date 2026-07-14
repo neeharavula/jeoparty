@@ -7,7 +7,10 @@ export function useCountdown(
   const [remaining, setRemaining] = useState(durationSeconds);
 
   useEffect(() => {
-    if (!revealedAt) return;
+    if (!revealedAt) {
+      setRemaining(durationSeconds);
+      return;
+    }
 
     function tick() {
       const elapsed = (Date.now() - new Date(revealedAt!).getTime()) / 1000;
