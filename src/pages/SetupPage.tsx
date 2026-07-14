@@ -1,9 +1,9 @@
 import { useState } from "react";
 import {
-  MorphingPopover,
-  MorphingPopoverContent,
-  MorphingPopoverTrigger,
-} from "@/components/motion-primitives/morphing-popover";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/motion-primitives/dialog";
 
 /* base for all question types */
 type BaseQuestion = {
@@ -77,6 +77,51 @@ function SetupPage() {
     );
   }
 
+  function updateQuestion(
+    categoryId: string,
+    questionId: string,
+    updater: (question: QuestionDraft) => QuestionDraft,
+  ) {
+    setCategories((prevCategories) =>
+      prevCategories.map((category) =>
+        category.id !== categoryId
+          ? category
+          : {
+              ...category,
+              questions: category.questions.map((question) =>
+                question.id !== questionId ? question : updater(question),
+              ),
+            },
+      ),
+    );
+  }
+
+  function selectQuestionType(
+    categoryId: string,
+    questionId: string,
+    newType: "multiple_choice" | "free_text",
+  ) {
+    updateQuestion(categoryId, questionId, (question) => {
+      if (newType === "multiple_choice") {
+        return {
+          id: question.id,
+          points: question.points,
+          prompt: question.prompt,
+          questionType: "multiple_choice",
+          choices: ["", ""],
+          correctAnswer: "",
+        };
+      }
+      return {
+        id: question.id,
+        points: question.points,
+        prompt: question.prompt,
+        questionType: "free_text",
+        correctAnswer: "",
+      };
+    });
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-5">
       <h1>setup</h1>
@@ -91,25 +136,43 @@ function SetupPage() {
               }
             />
             {category.questions.map((question) => (
-              <MorphingPopover
+              <Dialog
                 key={question.id}
                 open={editingQuestionId === question.id}
-                onOpenChange={(isOpen) =>
+                onOpenChange={(isOpen: boolean) =>
                   setEditingQuestionId(isOpen ? question.id : null)
                 }
               >
-                <MorphingPopoverTrigger asChild>
-                  <div className="bg-[#dcdcdc] p-5 rounded-[10px]  w-full">
-                    {question.points}
-                  </div>
-                </MorphingPopoverTrigger>
-                <MorphingPopoverContent className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
-                  <p>form goes here</p>
+                <DialogTrigger className="bg-[#dcdcdc] p-5 rounded-[10px] w-full">
+                  {question.points}
+                </DialogTrigger>
+                <DialogContent>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      selectQuestionType(category.id, question.id, "free_text")
+                    }
+                  >
+                    Free text
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      selectQuestionType(
+                        category.id,
+                        question.id,
+                        "multiple_choice",
+                      )
+                    }
+                  >
+                    Multiple choice
+                  </button>
+
                   <button onClick={() => setEditingQuestionId(null)}>
                     Save
                   </button>
-                </MorphingPopoverContent>
-              </MorphingPopover>
+                </DialogContent>
+              </Dialog>
             ))}
           </div>
         ))}

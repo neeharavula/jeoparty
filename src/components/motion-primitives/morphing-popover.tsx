@@ -5,6 +5,7 @@ import {
   useId,
   useRef,
   useEffect,
+  useMemo,
   createContext,
   useContext,
   isValidElement,
@@ -123,10 +124,16 @@ function MorphingPopoverTrigger({
     );
   }
 
-  if (asChild && isValidElement(children)) {
-    const MotionComponent = motion.create(
-      children.type as React.ForwardRefExoticComponent<any>,
-    );
+  const childType = isValidElement(children) ? children.type : null;
+  const MotionComponent = useMemo(
+    () =>
+      childType
+        ? motion.create(childType as React.ForwardRefExoticComponent<any>)
+        : null,
+    [childType],
+  );
+
+  if (asChild && isValidElement(children) && MotionComponent) {
     const childProps = children.props as Record<string, unknown>;
 
     return (
