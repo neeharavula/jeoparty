@@ -47,11 +47,11 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
                   : `p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 ${
                       question.state === "unplayed"
                         ? "bg-[#dcdcdc]"
-                        : "bg-gray-200 opacity-40"
+                        : "bg-gray-300"
                     } ${onQuestionClick ? "cursor-pointer" : ""}`
               }
             >
-              {!isCompact && question.state === "unplayed" && (
+              {!isCompact && (
                 <span className="font-offbit text-lg tracking-wider">
                   {question.points}
                 </span>

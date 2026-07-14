@@ -119,14 +119,16 @@ function PlayPage() {
                 <div>
                   {revealed.question.choices.map(
                     (choice: string, index: number) => (
-                      <button
-                        key={index}
-                        onClick={() => submitAnswer(choice)}
-                        disabled={secondsLeft === 0}
-                      >
+                      <label key={index}>
+                        <input
+                          type="radio"
+                          name={`answer-${revealed.question.id}`}
+                          checked={myAnswer === choice}
+                          onChange={() => submitAnswer(choice)}
+                          disabled={secondsLeft === 0}
+                        />
                         {choice}
-                        {myAnswer === choice ? " (selected)" : ""}
-                      </button>
+                      </label>
                     ),
                   )}
                 </div>
