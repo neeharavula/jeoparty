@@ -47,15 +47,26 @@ function HostPage() {
     if (game?.status !== "in_progress" || game.current_question_id) return;
     if (categories.length === 0) return;
 
-    const allAnswered = categories.every((category) =>
-      category.questions.every(
-        (question: any) => question.state === "answered",
-      ),
-    );
+    async function checkCompletion() {
+      const categoryIds = categories.map((category) => category.id);
+      const { data } = await supabase
+        .from("questions")
+        .select("state")
+        .in("category_id", categoryIds);
 
-    if (allAnswered) {
-      supabase.from("games").update({ status: "complete" }).eq("id", game.id);
+      const allAnswered =
+        (data ?? []).length > 0 &&
+        (data ?? []).every((question: any) => question.state === "answered");
+
+      if (allAnswered) {
+        await supabase
+          .from("games")
+          .update({ status: "complete" })
+          .eq("id", game.id);
+      }
     }
+
+    checkCompletion();
   }, [categories, game?.status, game?.current_question_id]);
 
   function toggleCorrect(submissionId: string) {
