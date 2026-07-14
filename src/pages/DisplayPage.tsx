@@ -32,21 +32,25 @@ function DisplayPage() {
     return <h1>Game not found</h1>;
   }
 
-  return (
-    <div>
-      <h1>Display</h1>
+  if (game.status === "setup") {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <h1 className="text-center pt-4">Jeoparty</h1>
 
-      {game.status === "setup" && (
-        <>
+        <div className="flex-1 flex flex-col items-center justify-center gap-2">
           <h2>Players</h2>
           <ul>
             {players.map((player) => (
               <li key={player.id}>{player.name}</li>
             ))}
           </ul>
-        </>
-      )}
+        </div>
+      </div>
+    );
+  }
 
+  return (
+    <div>
       {game.status === "in_progress" && !game.current_question_id && (
         <Board categories={categories} size="full" />
       )}

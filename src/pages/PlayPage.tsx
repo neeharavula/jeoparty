@@ -87,22 +87,42 @@ function PlayPage() {
 
   if (!player) {
     return (
-      <div>
-        <h1>Join Game</h1>
-        <input
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          placeholder="Your name"
-        />
-        <button onClick={joinGame}>Join</button>
+      <div className="min-h-screen relative flex flex-col items-center justify-center gap-4">
+        <h1 className="absolute top-0 left-0 w-full text-center pt-4">
+          Jeoparty
+        </h1>
+        <div className="flex flex-col gap-3 bg-[#a6c5d2] p-5 rounded-[10px] shadow-sm text-small">
+          <input
+            className="bg-[#dcdcdc] rounded-[10px] p-2"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder="enter name"
+          />
+          <button
+            className="bg-white rounded-[10px] p-2 w-full"
+            onClick={joinGame}
+          >
+            Join
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (game.status === "setup") {
+    return (
+      <div className="min-h-screen relative flex flex-col items-center justify-center gap-4">
+        <h1 className="absolute top-0 left-0 w-full text-center pt-4">
+          Jeoparty
+        </h1>
+        <p className="text-center">You're in.</p>
+        <p className="text-center">Waiting for host to start...</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h1>Welcome, {player.name}</h1>
-      {game.status === "setup" && <p>Waiting for host to start...</p>}
       {game.status === "in_progress" && !game.current_question_id && (
         <>
           <p>Waiting for the next question...</p>

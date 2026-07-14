@@ -200,24 +200,34 @@ function HostPage() {
     return <h1>Game not found</h1>;
   }
 
-  return (
-    <div>
-      <h1>Host</h1>
-      <p>Room code: {roomCode}</p>
+  if (game.status === "setup") {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <h1 className="text-center pt-4">Jeoparty</h1>
+        <p className="text-center">Host Mode</p>
+        <p className="text-center">Room code: {roomCode}</p>
 
-      {game.status === "setup" && (
-        <>
+        <div className="flex-1 flex flex-col items-center justify-center gap-2">
           <h2>Players</h2>
           <ul>
             {players.map((player) => (
               <li key={player.id}>{player.name}</li>
             ))}
           </ul>
+        </div>
 
-          <button onClick={startGame}>Start Game</button>
-        </>
-      )}
+        <button
+          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer m-4"
+          onClick={startGame}
+        >
+          Start Game
+        </button>
+      </div>
+    );
+  }
 
+  return (
+    <div>
       {game.status === "in_progress" && !game.current_question_id && (
         <>
           <p>Pick next question to reveal</p>
