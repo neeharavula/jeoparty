@@ -123,13 +123,13 @@ function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-5">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
       <h1>setup</h1>
-      <div className="flex justify-center gap-5 font-mono text-sm">
+      <div className="flex justify-center gap-4 font-mono text-sm">
         {categories.map((category) => (
-          <div key={category.id} className="flex flex-col gap-5 w-30">
+          <div key={category.id} className="flex flex-col gap-3 w-30">
             <input
-              className="bg-[#a6c5d2] p-2.5 rounded-[10px] border-none font-mono text-sm text-center"
+              className="bg-[#a6c5d2] p-2.5 rounded-[10px] border-none font-mono text-sm text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
               value={category.name}
               onChange={(event) =>
                 editCategory(category.id, event.target.value)
@@ -143,8 +143,10 @@ function SetupPage() {
                   setEditingQuestionId(isOpen ? question.id : null)
                 }
               >
-                <DialogTrigger className="bg-[#dcdcdc] p-5 rounded-[10px] w-full">
-                  {question.points}
+                <DialogTrigger className="bg-[#dcdcdc] p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer">
+                  <span className="font-offbit text-lg tracking-wider">
+                    {question.points}
+                  </span>
                 </DialogTrigger>
                 <DialogContent className="font-mono text-xs p-5 w-96">
                   <div className="flex flex-col gap-3">
@@ -153,6 +155,7 @@ function SetupPage() {
                     </p>
                     <label className="text-gray-400 text-xs">Type</label>
                     <select
+                      className="bg-[#dcdcdc] rounded-[10px] p-2"
                       value={question.questionType}
                       onChange={(event) =>
                         selectQuestionType(
@@ -168,6 +171,7 @@ function SetupPage() {
 
                     <label className="text-gray-400 text-xs">Question</label>
                     <textarea
+                      className="bg-[#dcdcdc] rounded-[10px] p-2"
                       value={question.prompt}
                       onChange={(event) =>
                         updateQuestion(category.id, question.id, (q) => ({
@@ -181,6 +185,7 @@ function SetupPage() {
                       <>
                         <label className="text-gray-400 text-xs">Answer</label>
                         <textarea
+                          className="bg-[#dcdcdc] rounded-[10px] p-2"
                           value={question.correctAnswer}
                           onChange={(event) =>
                             updateQuestion(category.id, question.id, (q) => ({
@@ -208,7 +213,7 @@ function SetupPage() {
                               }
                             />
                             <textarea
-                              className="flex-1"
+                              className="flex-1 bg-[#dcdcdc] rounded-[10px] p-2"
                               value={choice}
                               onChange={(event) =>
                                 updateQuestion(

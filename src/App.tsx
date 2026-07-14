@@ -4,7 +4,6 @@ import SetupPage from "./pages/SetupPage";
 import HostPage from "./pages/HostPage";
 import PlayPage from "./pages/PlayPage";
 import DisplayPage from "./pages/DisplayPage";
-import "./App.css";
 
 function App() {
   return (
