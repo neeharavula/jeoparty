@@ -104,10 +104,9 @@ function PlayPage() {
       {game.status === "in_progress" && revealed && (
         <div>
           <p>
-            {revealed.category.name} {revealed.question.points}
+            {revealed.category.name || "Untitled"} {revealed.question.points}
           </p>
           <p>{revealed.question.prompt}</p>
-          <p>{secondsLeft}s</p>
 
           {revealed.question.question_type === "multiple_choice" ? (
             <div>
@@ -139,6 +138,8 @@ function PlayPage() {
               </button>
             </div>
           )}
+
+          <p>{secondsLeft}s</p>
 
           {myAnswer && <p>Answer locked in!</p>}
         </div>
