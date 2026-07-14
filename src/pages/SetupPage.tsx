@@ -78,7 +78,7 @@ function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-5">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-5">
       <h1>setup</h1>
       <div className="flex justify-center gap-5 font-mono text-sm">
         {categories.map((category) => (
