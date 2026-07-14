@@ -66,7 +66,7 @@ function PlayPage() {
       {game.status === "setup" && <p>Waiting for host to start...</p>}
       {game.status === "in_progress" && !game.current_question_id && (
         <>
-          <p>Picking the next question...</p>
+          <p>Waiting for the next question...</p>
           <Board categories={categories} size="compact" />
         </>
       )}

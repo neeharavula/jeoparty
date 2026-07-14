@@ -22,11 +22,15 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
             isCompact ? "flex flex-col gap-2 flex-1" : "flex flex-col gap-3 w-40"
           }
         >
-          {!isCompact && (
-            <div className="bg-[#a6c5d2] p-2.5 rounded-[10px] text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95">
-              {category.name || "Untitled"}
-            </div>
-          )}
+          <div
+            className={
+              isCompact
+                ? "bg-[#a6c5d2] rounded-[10px] h-8 w-16"
+                : "bg-[#a6c5d2] p-2.5 rounded-[10px] text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
+            }
+          >
+            {!isCompact && (category.name || "Untitled")}
+          </div>
           {category.questions.map((question: any) => (
             <button
               key={question.id}

@@ -18,6 +18,18 @@ function HostPage() {
       .eq("id", game.id);
   }
 
+  async function revealQuestion(question: any) {
+    await supabase
+      .from("questions")
+      .update({ state: "revealed", revealed_at: new Date().toISOString() })
+      .eq("id", question.id);
+
+    await supabase
+      .from("games")
+      .update({ current_question_id: question.id })
+      .eq("id", game.id);
+  }
+
   if (loading) {
     return <h1>Loading...</h1>;
   }
@@ -47,7 +59,11 @@ function HostPage() {
       {game.status === "in_progress" && !game.current_question_id && (
         <>
           <p>Pick next question to reveal</p>
-          <Board categories={categories} size="compact" />
+          <Board
+            categories={categories}
+            size="compact"
+            onQuestionClick={revealQuestion}
+          />
         </>
       )}
 
