@@ -65,7 +65,7 @@ function DisplayPage() {
           <div className="flex-1 flex flex-col items-center justify-center gap-2">
             <Board categories={categories} size="full" />
           </div>
-          <p className="font-mono text-center text-[var(--text-h)] pb-6">
+          <p className="font-mono text-center text-[var(--text-h)] pb-12">
             Choosing next question ...
           </p>
         </div>

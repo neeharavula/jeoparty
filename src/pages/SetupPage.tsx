@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Copy, Check } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -295,14 +296,14 @@ function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-      <h1>setup</h1>
-
+    <div className="min-h-screen flex flex-col">
+      <h1 className="text-center pt-4 m-0">Jeoparty</h1>
+      <div className="flex-1 flex flex-col items-center justify-center gap-4">
       <div className="flex flex-col items-center gap-1 font-mono text-sm">
         <div className="flex gap-2">
           <input
             className="bg-[#dcdcdc] rounded-[10px] p-2 border-none font-mono text-sm text-center text-[var(--placeholder-text)]"
-            placeholder="Room code"
+            placeholder="Past Game Code"
             value={loadRoomCode}
             onChange={(event) => setLoadRoomCode(event.target.value)}
           />
@@ -311,7 +312,7 @@ function SetupPage() {
             onClick={loadQuestionSet}
             disabled={isLoadingSet || !loadRoomCode.trim()}
           >
-            {isLoadingSet ? "Loading..." : "Load Set"}
+            {isLoadingSet ? "Loading..." : "Load Board"}
           </button>
         </div>
         {loadError && <p className="text-xs text-red-500">{loadError}</p>}
@@ -451,7 +452,7 @@ function SetupPage() {
       </div>
 
       <button
-        className="bg-[#6b93a6] text-white rounded-[10px] p-3 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono"
+        className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono text-sm"
         onClick={generateGame}
         disabled={isGenerating}
       >
@@ -459,49 +460,34 @@ function SetupPage() {
       </button>
 
       {gameLinks && (
-        <div className="flex flex-col gap-2 text-center font-mono text-sm">
-          <p>
-            Play:{" "}
-            <a href={gameLinks.play} target="_blank" rel="noopener noreferrer">
-              {gameLinks.play}
-            </a>{" "}
-            <button
-              className="cursor-pointer text-xs text-gray-400"
-              onClick={() => copyLink(gameLinks.play)}
-            >
-              {copiedLink === gameLinks.play ? "Copied!" : "Copy"}
-            </button>
-          </p>
-          <p>
-            Host:{" "}
-            <a href={gameLinks.host} target="_blank" rel="noopener noreferrer">
-              {gameLinks.host}
-            </a>{" "}
-            <button
-              className="cursor-pointer text-xs text-gray-400"
-              onClick={() => copyLink(gameLinks.host)}
-            >
-              {copiedLink === gameLinks.host ? "Copied!" : "Copy"}
-            </button>
-          </p>
-          <p>
-            Display:{" "}
-            <a
-              href={gameLinks.display}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {gameLinks.display}
-            </a>{" "}
-            <button
-              className="cursor-pointer text-xs text-gray-400"
-              onClick={() => copyLink(gameLinks.display)}
-            >
-              {copiedLink === gameLinks.display ? "Copied!" : "Copy"}
-            </button>
-          </p>
+        <div className="flex gap-8 font-mono text-sm">
+          {(
+            [
+              { label: "Play", url: gameLinks.play },
+              { label: "Host", url: gameLinks.host },
+              { label: "Display", url: gameLinks.display },
+            ] as const
+          ).map(({ label, url }) => (
+            <div key={label} className="flex items-center gap-1">
+              <a href={url} target="_blank" rel="noopener noreferrer">
+                {label}
+              </a>
+              <button
+                className="cursor-pointer text-gray-400"
+                onClick={() => copyLink(url)}
+                aria-label="Copy link"
+              >
+                {copiedLink === url ? (
+                  <Check size={14} />
+                ) : (
+                  <Copy size={14} />
+                )}
+              </button>
+            </div>
+          ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
