@@ -27,16 +27,16 @@ function PlayPage() {
     (submission) => submission.player_id === player?.id,
   );
 
-  const [myAnswer, setMyAnswer] = useState<string | null>(null);
+  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [freeTextInput, setFreeTextInput] = useState("");
 
   useEffect(() => {
-    setMyAnswer(null);
+    setSelectedChoice(null);
     setFreeTextInput("");
   }, [revealed?.question.id]);
 
   async function submitAnswer(answerText: string) {
-    if (!revealed || !player) return;
+    if (!revealed || !player || !answerText.trim()) return;
 
     await supabase.from("submissions").upsert(
       {
@@ -47,8 +47,6 @@ function PlayPage() {
       },
       { onConflict: "question_id,player_id" },
     );
-
-    setMyAnswer(answerText);
   }
 
   useEffect(() => {
@@ -143,73 +141,111 @@ function PlayPage() {
           }`}
         >
           <h1 className="text-center pt-4 m-0">Jeoparty</h1>
-          <div className="flex-1 flex flex-col items-center justify-center gap-2">
-          <div className="bg-[#dcdcdc] rounded-[10px] p-5 shadow-sm text-center mx-4 flex flex-col gap-2">
-            <p>
-              {revealed.category.name || "Untitled"} {revealed.question.points}
-            </p>
-            <h2 className="text-center">{revealed.question.prompt}</h2>
-          </div>
-
-          {revealed.question.state === "revealed" && (
-            <>
-              {revealed.question.question_type === "multiple_choice" ? (
-                <div>
-                  {revealed.question.choices.map(
-                    (choice: string, index: number) => (
-                      <label key={index}>
-                        <input
-                          type="radio"
-                          name={`answer-${revealed.question.id}`}
-                          checked={myAnswer === choice}
-                          onChange={() => submitAnswer(choice)}
-                          disabled={secondsLeft === 0}
-                        />
-                        {choice}
-                      </label>
-                    ),
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <input
-                    value={freeTextInput}
-                    onChange={(event) => setFreeTextInput(event.target.value)}
-                    disabled={secondsLeft === 0}
-                  />
-                  <button
-                    onClick={() => submitAnswer(freeTextInput)}
-                    disabled={secondsLeft === 0}
-                  >
-                    Submit
-                  </button>
-                </div>
-              )}
-
-              <p>{secondsLeft}s</p>
-
-              {myAnswer && <p>Answer locked in!</p>}
-            </>
-          )}
-
-          {revealed.question.state === "judging" && <p>Host is judging...</p>}
-
-          {revealed.question.state === "answered" && (
-            <div className="text-center">
-              <h2>Correct answer: {revealed.question.correct_answer}</h2>
-              <p
-                className={`text-center ${
-                  mySubmission?.is_correct
-                    ? "text-green-800"
-                    : "text-red-800"
-                }`}
-              >
-                {mySubmission?.is_correct
-                  ? "You got it!"
-                  : "Better luck next time"}
-              </p>
+          <p className="text-center my-8 text-gray-400 text-sm font-mono">
+            {revealed.category.name || "Untitled"} {revealed.question.points}
+          </p>
+          <div
+            className={`flex-1 flex flex-col items-center gap-2 px-6 pb-6 ${
+              revealed.question.state === "revealed" ? "" : "justify-center"
+            }`}
+          >
+            {revealed.question.state === "revealed" && (
+              <div className="w-full flex-1 max-h-32 flex flex-col items-center">
+                <div className="flex-1" />
+                <p className="font-offbit text-7xl text-[#6b93a6]">
+                  {secondsLeft}
+                </p>
+                <div className="flex-1" />
+              </div>
+            )}
+            <div className="w-full flex flex-col gap-2">
+              <label className="text-gray-400 text-xs font-mono mb-2">
+                QUESTION
+              </label>
+              <h2 className="text-3xl">{revealed.question.prompt}</h2>
             </div>
-          )}
+
+            {revealed.question.state === "revealed" && (
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
+                {revealed.question.question_type === "multiple_choice" ? (
+                  <>
+                    <label className="text-gray-400 text-xs font-mono mb-2">
+                      SELECT YOUR ANSWER
+                    </label>
+                    <div className="flex flex-col gap-4">
+                      {revealed.question.choices.map(
+                        (choice: string, index: number) => (
+                          <label
+                            key={index}
+                            className="flex items-center gap-2 leading-none"
+                          >
+                            <input
+                              type="radio"
+                              className="m-0"
+                              name={`answer-${revealed.question.id}`}
+                              checked={selectedChoice === choice}
+                              onChange={() => setSelectedChoice(choice)}
+                              disabled={secondsLeft === 0}
+                            />
+                            <span className="font-offbit text-3xl text-[var(--text-h)]">
+                              {choice}
+                            </span>
+                          </label>
+                        ),
+                      )}
+                    </div>
+                    <div className="flex-1" />
+                    <button
+                      className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer"
+                      onClick={() => submitAnswer(selectedChoice ?? "")}
+                      disabled={!selectedChoice || secondsLeft === 0}
+                    >
+                      Submit
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <label className="text-gray-400 text-xs font-mono mb-2">
+                      TYPE YOUR ANSWER
+                    </label>
+                    <textarea
+                      className="bg-[#eeeeee] rounded-[10px] p-3 flex-1 min-h-0 mb-6 font-offbit text-3xl text-[var(--text-h)]"
+                      value={freeTextInput}
+                      onChange={(event) => setFreeTextInput(event.target.value)}
+                      disabled={secondsLeft === 0}
+                    />
+                    <button
+                      className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono"
+                      onClick={() => submitAnswer(freeTextInput)}
+                      disabled={!freeTextInput.trim() || secondsLeft === 0}
+                    >
+                      Submit
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {revealed.question.state === "judging" && <p>Host is judging...</p>}
+
+            {revealed.question.state === "answered" && (
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
+                <label className="text-gray-400 text-xs font-mono mb-2">
+                  CORRECT ANSWER
+                </label>
+                <h2 className="text-3xl">{revealed.question.correct_answer}</h2>
+                <div className="flex-1" />
+                <p
+                  className={`text-center ${
+                    mySubmission?.is_correct ? "text-green-800" : "text-red-800"
+                  }`}
+                >
+                  {mySubmission?.is_correct
+                    ? "You got it!"
+                    : "Better luck next time"}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -250,24 +250,43 @@ function HostPage() {
       {game.status === "in_progress" && revealed && (
         <div className="min-h-screen flex flex-col">
           <h1 className="text-center pt-4 m-0">Jeoparty</h1>
-          <div className="flex-1 flex flex-col items-center justify-center gap-2">
-            <div className="bg-[#dcdcdc] rounded-[10px] p-5 shadow-sm text-center mx-4 flex flex-col gap-2">
-              <p>
-                {revealed.category.name || "Untitled"}{" "}
-                {revealed.question.points}
-              </p>
-              <h2 className="text-center">{revealed.question.prompt}</h2>
+          <p className="text-center my-8 text-gray-400 text-sm font-mono">
+            {revealed.category.name || "Untitled"} {revealed.question.points}
+          </p>
+          <div
+            className={`flex-1 flex flex-col items-center gap-2 px-6 pb-6 ${
+              revealed.question.state === "revealed" ? "" : "justify-center"
+            }`}
+          >
+            {revealed.question.state === "revealed" && (
+              <div className="w-full flex-1 max-h-32 flex flex-col items-center">
+                <div className="flex-1" />
+                <p className="font-offbit text-7xl text-[#6b93a6]">
+                  {secondsLeft}
+                </p>
+                <div className="flex-1" />
+              </div>
+            )}
+            <div className="w-full flex flex-col gap-2">
+              <label className="text-gray-400 text-xs font-mono mb-2">
+                QUESTION
+              </label>
+              <h2 className="text-3xl">{revealed.question.prompt}</h2>
             </div>
 
             {revealed.question.state === "revealed" && (
-              <>
-                <p>{secondsLeft}s</p>
-                <p>{submissions.length} submitted</p>
-              </>
+              <div className="w-full flex flex-col gap-2 mt-4">
+                <label className="text-gray-400 text-xs font-mono mb-2">
+                  SUBMISSIONS
+                </label>
+                <p className="font-offbit text-3xl text-[var(--text-h)]">
+                  {submissions.length}/{players.length}
+                </p>
+              </div>
             )}
 
             {revealed.question.state === "judging" && (
-              <div>
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2">
                 {submissions.map((submission) => (
                   <label key={submission.id}>
                     <input
@@ -278,37 +297,44 @@ function HostPage() {
                     {playerName(submission.player_id)}: {submission.answer_text}
                   </label>
                 ))}
-                <div className="flex justify-center">
-                  <button
-                    className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer mx-4"
-                    onClick={submitJudging}
-                  >
-                    Submit
-                  </button>
-                </div>
+                <div className="flex-1" />
+                <button
+                  className="bg-[#6b93a6] font-mono text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer w-full"
+                  onClick={submitJudging}
+                >
+                  Submit
+                </button>
               </div>
             )}
 
             {revealed.question.state === "answered" && (
-              <div>
-                <h2>Correct answer: {revealed.question.correct_answer}</h2>
-                <ul>
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
+                <label className="text-gray-400 text-xs font-mono mb-2">
+                  CORRECT ANSWER
+                </label>
+                <h2 className="text-3xl">{revealed.question.correct_answer}</h2>
+                <label className="text-gray-400 text-xs font-mono mb-2 mt-4">
+                  WHO GOT IT RIGHT?
+                </label>
+                <ul className="flex flex-col gap-1">
                   {submissions
                     .filter((submission) => submission.is_correct)
                     .map((submission) => (
-                      <li key={submission.id}>
+                      <li
+                        key={submission.id}
+                        className="font-offbit text-3xl text-[var(--text-h)]"
+                      >
                         {playerName(submission.player_id)}
                       </li>
                     ))}
                 </ul>
-                <div className="flex justify-center">
-                  <button
-                    className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer mx-4"
-                    onClick={nextQuestion}
-                  >
-                    Next
-                  </button>
-                </div>
+                <div className="flex-1" />
+                <button
+                  className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer"
+                  onClick={nextQuestion}
+                >
+                  Next
+                </button>
               </div>
             )}
           </div>

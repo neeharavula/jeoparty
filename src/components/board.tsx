@@ -44,21 +44,19 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
                   ? `w-12 h-12 rounded-[6px] ${
                       question.state === "unplayed"
                         ? "bg-[#dcdcdc]"
-                        : "bg-gray-200"
+                        : "bg-[#eeeeee]"
                     } ${onQuestionClick ? "cursor-pointer" : ""}`
                   : `p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 ${
                       question.state === "unplayed"
                         ? "bg-[#dcdcdc]"
-                        : "bg-gray-200"
+                        : "bg-[#eeeeee]"
                     } ${onQuestionClick ? "cursor-pointer" : ""}`
               }
             >
               {!isCompact && (
                 <span
                   className={`font-offbit text-lg tracking-wider ${
-                    question.state === "unplayed"
-                      ? ""
-                      : "text-gray-300"
+                    question.state === "unplayed" ? "" : "text-gray-200"
                   }`}
                 >
                   {question.points}
