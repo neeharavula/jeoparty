@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { usePlayers } from "@/hooks/usePlayers";
@@ -10,13 +10,21 @@ import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
 import Leaderboard from "@/components/leaderboard";
 
+type Player = {
+  id: string;
+  game_id: string;
+  name: string;
+  score: number;
+};
+
 function PlayPage() {
   const { roomCode } = useParams();
   const { game, loading } = useGame(roomCode);
   const players = usePlayers(game?.id);
   const categories = useBoard(game?.id);
   const [name, setName] = useState("");
-  const [player, setPlayer] = useState<any | null>(null);
+  const [player, setPlayer] = useState<Player | null>(null);
+  const [restoredForGameId, setRestoredForGameId] = useState<string>();
 
   const revealed = game?.current_question_id
     ? findRevealedQuestion(categories, game.current_question_id)
@@ -29,11 +37,23 @@ function PlayPage() {
 
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [freeTextInput, setFreeTextInput] = useState("");
+  const [answeredQuestionId, setAnsweredQuestionId] = useState(
+    revealed?.question.id,
+  );
 
-  useEffect(() => {
+  if (revealed?.question.id !== answeredQuestionId) {
+    setAnsweredQuestionId(revealed?.question.id);
     setSelectedChoice(null);
     setFreeTextInput("");
-  }, [revealed?.question.id]);
+  }
+
+  if (game?.id && game.id !== restoredForGameId) {
+    setRestoredForGameId(game.id);
+    const stored = localStorage.getItem(`jeoparty-player-${game.id}`);
+    if (stored) {
+      setPlayer(JSON.parse(stored));
+    }
+  }
 
   async function submitAnswer(answerText: string) {
     if (!revealed || !player || !answerText.trim()) return;
@@ -48,14 +68,6 @@ function PlayPage() {
       { onConflict: "question_id,player_id" },
     );
   }
-
-  useEffect(() => {
-    if (!game?.id) return;
-    const stored = localStorage.getItem(`jeoparty-player-${game.id}`);
-    if (stored) {
-      setPlayer(JSON.parse(stored));
-    }
-  }, [game?.id]);
 
   async function joinGame() {
     if (!name.trim() || !game) return;
@@ -91,16 +103,16 @@ function PlayPage() {
         </h1>
         <div className="flex flex-col gap-3 bg-[#a6c5d2] p-5 rounded-[10px] shadow-sm text-small">
           <input
-            className="bg-[#dcdcdc] rounded-[10px] p-2"
+            className="bg-[#dcdcdc] rounded-[10px] p-2 font-mono text-center"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            placeholder="enter name"
+            placeholder="Enter Name"
           />
           <button
-            className="bg-white rounded-[10px] p-2 w-full"
+            className="bg-white rounded-[10px] p-2 w-full font-mono"
             onClick={joinGame}
           >
-            Join
+            Join Game
           </button>
         </div>
       </div>
@@ -113,8 +125,8 @@ function PlayPage() {
         <h1 className="absolute top-0 left-0 w-full text-center pt-4">
           Jeoparty
         </h1>
-        <p className="text-center">You're in.</p>
-        <p className="text-center">Waiting for host to start...</p>
+        <p className="text-center font-mono">You're in.</p>
+        <p className="text-center font-mono">Waiting for other players...</p>
       </div>
     );
   }

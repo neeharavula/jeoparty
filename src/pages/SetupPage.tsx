@@ -63,6 +63,64 @@ function initBoard(): CategoryDraft[] {
   return Array.from({ length: 5 }, () => createEmptyCategory());
 }
 
+/* shape of a question row as stored in Supabase */
+type QuestionRow = {
+  points: number;
+  prompt: string;
+  question_type: "multiple_choice" | "free_text";
+  choices: string[] | null;
+  correct_answer: string | null;
+};
+
+/* fetch an existing game's board from Supabase and map it into draft shape */
+async function fetchGameAsDraft(roomCode: string): Promise<CategoryDraft[] | null> {
+  const { data: game, error: gameError } = await supabase
+    .from("games")
+    .select("id")
+    .eq("room_code", roomCode)
+    .maybeSingle();
+
+  if (gameError || !game) {
+    console.error(gameError);
+    return null;
+  }
+
+  const { data: categories, error: categoriesError } = await supabase
+    .from("categories")
+    .select("*, questions(*)")
+    .eq("game_id", game.id)
+    .order("sort_order")
+    .order("points", { referencedTable: "questions" });
+
+  if (categoriesError || !categories) {
+    console.error(categoriesError);
+    return null;
+  }
+
+  return categories.map((category) => ({
+    id: crypto.randomUUID(),
+    name: category.name ?? "",
+    questions: category.questions.map((question: QuestionRow) =>
+      question.question_type === "multiple_choice"
+        ? {
+            id: crypto.randomUUID(),
+            points: question.points,
+            prompt: question.prompt,
+            questionType: "multiple_choice",
+            choices: question.choices ?? ["", "", "", ""],
+            correctAnswer: question.correct_answer ?? "",
+          }
+        : {
+            id: crypto.randomUUID(),
+            points: question.points,
+            prompt: question.prompt,
+            questionType: "free_text",
+            correctAnswer: question.correct_answer ?? "",
+          },
+    ),
+  }));
+}
+
 /* generate a short room code, avoiding visually ambiguous characters */
 function generateRoomCode(): string {
   const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -91,11 +149,34 @@ function SetupPage() {
     return stored ? JSON.parse(stored) : null;
   });
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
+  const [loadRoomCode, setLoadRoomCode] = useState("");
+  const [isLoadingSet, setIsLoadingSet] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   function copyLink(url: string) {
     navigator.clipboard.writeText(url);
     setCopiedLink(url);
     setTimeout(() => setCopiedLink(null), 1500);
+  }
+
+  async function loadQuestionSet() {
+    const roomCode = loadRoomCode.trim().toUpperCase();
+    if (!roomCode) return;
+
+    setIsLoadingSet(true);
+    setLoadError(null);
+
+    const draft = await fetchGameAsDraft(roomCode);
+
+    if (!draft) {
+      setLoadError("No game found with that room code.");
+    } else {
+      setCategories(draft);
+      setGameLinks(null);
+      localStorage.removeItem("jeoparty-game-links");
+    }
+
+    setIsLoadingSet(false);
   }
 
   async function generateGame() {
@@ -216,6 +297,26 @@ function SetupPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">
       <h1>setup</h1>
+
+      <div className="flex flex-col items-center gap-1 font-mono text-sm">
+        <div className="flex gap-2">
+          <input
+            className="bg-[#dcdcdc] rounded-[10px] p-2 border-none font-mono text-sm text-center"
+            placeholder="Room code"
+            value={loadRoomCode}
+            onChange={(event) => setLoadRoomCode(event.target.value)}
+          />
+          <button
+            className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer"
+            onClick={loadQuestionSet}
+            disabled={isLoadingSet || !loadRoomCode.trim()}
+          >
+            {isLoadingSet ? "Loading..." : "Load Set"}
+          </button>
+        </div>
+        {loadError && <p className="text-xs text-red-500">{loadError}</p>}
+      </div>
+
       <div className="flex justify-center gap-4 font-mono text-sm">
         {categories.map((category, categoryIndex) => (
           <div key={category.id} className="flex flex-col gap-3 w-40">

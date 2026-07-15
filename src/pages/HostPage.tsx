@@ -208,21 +208,25 @@ function HostPage() {
   if (game.status === "setup") {
     return (
       <div className="min-h-screen flex flex-col">
-        <h1 className="text-center pt-4 m-0">Jeoparty</h1>
-        <p className="text-center">Host Mode</p>
-        <p className="text-center">Room code: {roomCode}</p>
+        <h1 className="text-center pt-4">Jeoparty</h1>
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-center font-mono">Host Mode</p>
+          <p className="text-center font-mono">Room Code: {roomCode}</p>
+        </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-2">
-          <h2>Players</h2>
+          <h2 className="text-3xl">Players</h2>
           <ul>
             {players.map((player) => (
-              <li key={player.id}>{player.name}</li>
+              <li key={player.id} className="font-mono">
+                {player.name}
+              </li>
             ))}
           </ul>
         </div>
 
         <button
-          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer m-4"
+          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono m-4"
           onClick={startGame}
         >
           Start Game
