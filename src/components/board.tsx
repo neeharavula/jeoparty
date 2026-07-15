@@ -11,7 +11,7 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
     <div
       className={
         isCompact
-          ? "flex justify-center gap-1 font-mono text-xs"
+          ? "flex justify-center gap-2 font-mono text-xs"
           : "flex justify-center gap-4 font-mono text-sm"
       }
     >
@@ -19,13 +19,13 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
         <div
           key={category.id}
           className={
-            isCompact ? "flex flex-col gap-1" : "flex flex-col gap-3 w-40"
+            isCompact ? "flex flex-col gap-2" : "flex flex-col gap-3 w-40"
           }
         >
           <div
             className={
               isCompact
-                ? "bg-[#a6c5d2] rounded-[6px] h-6 w-10"
+                ? "bg-[#a6c5d2] rounded-[6px] h-6 w-12"
                 : "bg-[#a6c5d2] p-2.5 rounded-[10px] text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
             }
           >
@@ -39,7 +39,7 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
               onClick={() => onQuestionClick?.(question)}
               className={
                 isCompact
-                  ? `w-10 h-10 rounded-[6px] ${
+                  ? `w-12 h-12 rounded-[6px] ${
                       question.state === "unplayed"
                         ? "bg-[#dcdcdc]"
                         : "bg-gray-200"

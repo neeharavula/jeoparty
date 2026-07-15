@@ -234,14 +234,16 @@ function HostPage() {
   return (
     <div>
       {game.status === "in_progress" && !game.current_question_id && (
-        <div className="flex flex-col items-center gap-2">
+        <div className="min-h-screen flex flex-col">
           <h1 className="text-center pt-4">Jeoparty</h1>
-          <Board
-            categories={categories}
-            size="compact"
-            onQuestionClick={revealQuestion}
-          />
-          <p className="mt-6">Pick next question to reveal</p>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2">
+            <Board
+              categories={categories}
+              size="compact"
+              onQuestionClick={revealQuestion}
+            />
+            <p className="mt-6">Pick next question to reveal</p>
+          </div>
         </div>
       )}
 
