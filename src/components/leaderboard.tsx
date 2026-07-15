@@ -10,7 +10,7 @@ function Leaderboard({ players }: LeaderboardProps) {
     <div className="min-h-screen flex flex-col">
       <h1 className="text-center pt-4 m-0">Jeoparty</h1>
       <div className="flex-1 flex flex-col items-center justify-center gap-2">
-        <label className="text-gray-400 text-sm font-mono uppercase mb-2">
+        <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
           Final Scores
         </label>
         <div className="flex flex-col items-center gap-2">

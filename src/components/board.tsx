@@ -28,7 +28,7 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
             className={`${getCategoryColorClass(index)} ${
               isCompact
                 ? "rounded-[6px] h-6 w-12"
-                : "p-2.5 rounded-[10px] text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
+                : "p-2.5 rounded-[10px] text-center uppercase text-[var(--tile-unplayed-text)] shadow-sm transition-transform duration-300 ease-out hover:scale-95"
             }`}
           >
             {!isCompact && (category.name || "Untitled")}

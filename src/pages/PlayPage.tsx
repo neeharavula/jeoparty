@@ -157,7 +157,7 @@ function PlayPage() {
             className={`text-center my-8 text-sm font-mono uppercase ${
               revealed.question.state === "answered"
                 ? "text-gray-300"
-                : "text-gray-400"
+                : "text-[var(--label-text)]"
             }`}
           >
             {revealed.category.name || "Untitled"} {revealed.question.points}
@@ -181,7 +181,7 @@ function PlayPage() {
                 className={`text-sm font-mono uppercase mb-2 ${
                   revealed.question.state === "answered"
                     ? "text-gray-300"
-                    : "text-gray-400"
+                    : "text-[var(--label-text)]"
                 }`}
               >
                 Question
@@ -199,7 +199,7 @@ function PlayPage() {
               <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
                 {revealed.question.question_type === "multiple_choice" ? (
                   <>
-                    <label className="text-gray-400 text-sm font-mono uppercase mb-2">
+                    <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
                       Select Your Answer
                     </label>
                     <div className="flex flex-col gap-4">
@@ -235,7 +235,7 @@ function PlayPage() {
                   </>
                 ) : (
                   <>
-                    <label className="text-gray-400 text-sm font-mono uppercase mb-2">
+                    <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
                       Type Your Answer
                     </label>
                     <textarea

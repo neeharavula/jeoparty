@@ -15,7 +15,7 @@
 }
 
 :root {
-  --text: #6b6375;
+  --text: #7b7b7b;
   --text-h: #08060d;
   --bg: #fff;
   --heading: "Offbit Trail", system-ui, Roboto, sans-serif;
@@ -31,10 +31,11 @@
   --incorrect: #e3496d;
   --correct-text: #324d34;
   --incorrect-text: #913047;
-  --tile-unplayed-bg: #dcdcdc;
+  --tile-unplayed-bg: #dedede;
   --tile-played-bg: #eeeeee;
   --tile-unplayed-text: var(--text);
   --tile-played-text: #e5e7eb;
+  --label-text: #9ca3af;
 }
 
 @layer base {
@@ -45,6 +46,8 @@
   }
   body {
     margin: 0;
+    font-variant-ligatures: none;
+    font-kerning: none;
   }
   h1,
   h2 {
