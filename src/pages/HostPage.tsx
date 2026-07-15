@@ -208,7 +208,7 @@ function HostPage() {
   if (game.status === "setup") {
     return (
       <div className="min-h-screen flex flex-col">
-        <h1 className="text-center pt-4">Jeoparty</h1>
+        <h1 className="text-center pt-4 m-0">Jeoparty</h1>
         <p className="text-center">Host Mode</p>
         <p className="text-center">Room code: {roomCode}</p>
 
@@ -235,7 +235,7 @@ function HostPage() {
     <div>
       {game.status === "in_progress" && !game.current_question_id && (
         <div className="min-h-screen flex flex-col">
-          <h1 className="text-center pt-4">Jeoparty</h1>
+          <h1 className="text-center pt-4 m-0">Jeoparty</h1>
           <div className="flex-1 flex flex-col items-center justify-center gap-2">
             <Board
               categories={categories}
@@ -249,9 +249,9 @@ function HostPage() {
 
       {game.status === "in_progress" && revealed && (
         <div className="min-h-screen flex flex-col">
-          <h1 className="text-center pt-4">Jeoparty</h1>
+          <h1 className="text-center pt-4 m-0">Jeoparty</h1>
           <div className="flex-1 flex flex-col items-center justify-center gap-2">
-            <div className="bg-[#dcdcdc] rounded-[10px] p-5 shadow-sm text-center mx-4">
+            <div className="bg-[#dcdcdc] rounded-[10px] p-5 shadow-sm text-center mx-4 flex flex-col gap-2">
               <p>
                 {revealed.category.name || "Untitled"}{" "}
                 {revealed.question.points}

@@ -5,6 +5,7 @@ import {
   DialogTrigger,
 } from "@/components/motion-primitives/dialog";
 import { supabase } from "@/lib/supabaseClient";
+import { getCategoryColorClass } from "@/lib/board";
 
 /* base for all question types */
 type BaseQuestion = {
@@ -216,10 +217,10 @@ function SetupPage() {
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">
       <h1>setup</h1>
       <div className="flex justify-center gap-4 font-mono text-sm">
-        {categories.map((category) => (
+        {categories.map((category, categoryIndex) => (
           <div key={category.id} className="flex flex-col gap-3 w-40">
             <input
-              className="bg-[#a6c5d2] p-2.5 rounded-[10px] border-none font-mono text-sm text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
+              className={`${getCategoryColorClass(categoryIndex)} p-2.5 rounded-[10px] border-none font-mono text-sm text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95`}
               placeholder="Category"
               value={category.name}
               onChange={(event) =>

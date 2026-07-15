@@ -1,3 +1,5 @@
+import { getCategoryColorClass } from "@/lib/board";
+
 type BoardProps = {
   categories: any[];
   size?: "full" | "compact";
@@ -15,7 +17,7 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
           : "flex justify-center gap-4 font-mono text-sm"
       }
     >
-      {categories.map((category) => (
+      {categories.map((category, index) => (
         <div
           key={category.id}
           className={
@@ -23,11 +25,11 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
           }
         >
           <div
-            className={
+            className={`${getCategoryColorClass(index)} ${
               isCompact
-                ? "bg-[#a6c5d2] rounded-[6px] h-6 w-12"
-                : "bg-[#a6c5d2] p-2.5 rounded-[10px] text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
-            }
+                ? "rounded-[6px] h-6 w-12"
+                : "p-2.5 rounded-[10px] text-center shadow-sm transition-transform duration-300 ease-out hover:scale-95"
+            }`}
           >
             {!isCompact && (category.name || "Untitled")}
           </div>

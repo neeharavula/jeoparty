@@ -22,6 +22,11 @@
   color-scheme: light;
   color: var(--text);
   background: var(--bg);
+  --category-1: #a6c5d2;
+  --category-2: #a5bd96;
+  --category-3: #dcac8e;
+  --category-4: #f0d89d;
+  --category-5: #ecb9c6;
 }
 
 @layer base {
@@ -30,17 +35,14 @@
   *::after {
     box-sizing: border-box;
   }
-
   body {
     margin: 0;
   }
-
   h1,
   h2 {
     font-family: var(--heading);
     color: var(--text-h);
   }
-
   h1 {
     font-size: 56px;
     /*letter-spacing: 2px;*/
@@ -50,7 +52,6 @@
       margin: 20px 0;
     }
   }
-
   h2 {
     font-size: 24px;
     line-height: 118%;
@@ -60,7 +61,6 @@
       font-size: 20px;
     }
   }
-
   p {
     margin: 0;
   }
