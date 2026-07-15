@@ -301,7 +301,7 @@ function SetupPage() {
       <div className="flex flex-col items-center gap-1 font-mono text-sm">
         <div className="flex gap-2">
           <input
-            className="bg-[#dcdcdc] rounded-[10px] p-2 border-none font-mono text-sm text-center"
+            className="bg-[#dcdcdc] rounded-[10px] p-2 border-none font-mono text-sm text-center text-[var(--placeholder-text)]"
             placeholder="Room code"
             value={loadRoomCode}
             onChange={(event) => setLoadRoomCode(event.target.value)}
@@ -317,11 +317,11 @@ function SetupPage() {
         {loadError && <p className="text-xs text-red-500">{loadError}</p>}
       </div>
 
-      <div className="flex justify-center gap-4 font-mono text-sm">
+      <div className="flex justify-center gap-6 font-mono text-sm">
         {categories.map((category, categoryIndex) => (
-          <div key={category.id} className="flex flex-col gap-3 w-40">
+          <div key={category.id} className="flex flex-col gap-4 w-48">
             <input
-              className={`${getCategoryColorClass(categoryIndex)} p-2.5 rounded-[10px] border-none font-mono text-sm text-center uppercase text-[var(--tile-unplayed-text)] shadow-sm transition-transform duration-300 ease-out hover:scale-95`}
+              className={`${getCategoryColorClass(categoryIndex)} p-3 rounded-[10px] border-none font-offbit text-xl text-center text-[var(--category-header-text)] shadow-sm transition-transform duration-300 ease-out hover:scale-95`}
               placeholder="Category"
               value={category.name}
               onChange={(event) =>
@@ -336,8 +336,8 @@ function SetupPage() {
                   setEditingQuestionId(isOpen ? question.id : null)
                 }
               >
-                <DialogTrigger className="bg-[var(--tile-unplayed-bg)] p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer">
-                  <span className="font-offbit text-lg tracking-wider text-[var(--tile-unplayed-text)]">
+                <DialogTrigger className="bg-[var(--tile-unplayed-bg)] p-6 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer">
+                  <span className="font-offbit text-xl tracking-wider text-[var(--tile-unplayed-text)]">
                     {question.points}
                   </span>
                 </DialogTrigger>
@@ -348,7 +348,7 @@ function SetupPage() {
                     </p>
                     <label className="text-gray-400 text-xs">Type</label>
                     <select
-                      className="bg-[#dcdcdc] rounded-[10px] p-2"
+                      className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
                       value={question.questionType}
                       onChange={(event) =>
                         selectQuestionType(
@@ -364,7 +364,7 @@ function SetupPage() {
 
                     <label className="text-gray-400 text-xs">Question</label>
                     <textarea
-                      className="bg-[#dcdcdc] rounded-[10px] p-2"
+                      className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
                       value={question.prompt}
                       onChange={(event) =>
                         updateQuestion(category.id, question.id, (q) => ({
@@ -378,7 +378,7 @@ function SetupPage() {
                       <>
                         <label className="text-gray-400 text-xs">Answer</label>
                         <textarea
-                          className="bg-[#dcdcdc] rounded-[10px] p-2"
+                          className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
                           value={question.correctAnswer}
                           onChange={(event) =>
                             updateQuestion(category.id, question.id, (q) => ({
@@ -406,7 +406,7 @@ function SetupPage() {
                               }
                             />
                             <textarea
-                              className="flex-1 bg-[#dcdcdc] rounded-[10px] p-2"
+                              className="flex-1 bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
                               value={choice}
                               onChange={(event) =>
                                 updateQuestion(

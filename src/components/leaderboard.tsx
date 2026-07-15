@@ -1,8 +1,11 @@
+import AutoColumnList from "@/components/auto-column-list";
+
 type LeaderboardProps = {
   players: any[];
+  textSize?: string;
 };
 
-function Leaderboard({ players }: LeaderboardProps) {
+function Leaderboard({ players, textSize = "text-3xl" }: LeaderboardProps) {
   const sorted = [...players].sort((a, b) => b.score - a.score);
   const topScore = sorted[0]?.score;
 
@@ -13,11 +16,12 @@ function Leaderboard({ players }: LeaderboardProps) {
         <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
           Final Scores
         </label>
-        <div className="flex flex-col items-center gap-2">
-          {sorted.map((player) => (
+        <AutoColumnList
+          items={sorted}
+          getKey={(player) => player.id}
+          renderItem={(player) => (
             <p
-              key={player.id}
-              className={`font-offbit text-3xl ${
+              className={`font-offbit ${textSize} ${
                 player.score === topScore
                   ? "text-[var(--correct)]"
                   : "text-[var(--text-h)]"
@@ -25,8 +29,8 @@ function Leaderboard({ players }: LeaderboardProps) {
             >
               {player.name}: {player.score}
             </p>
-          ))}
-        </div>
+          )}
+        />
       </div>
     </div>
   );

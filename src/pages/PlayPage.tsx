@@ -103,7 +103,7 @@ function PlayPage() {
         </h1>
         <div className="flex flex-col gap-3 bg-[#a6c5d2] p-5 rounded-[10px] shadow-sm text-small">
           <input
-            className="bg-[#dcdcdc] rounded-[10px] p-2 font-mono text-center"
+            className="bg-[#dcdcdc] rounded-[10px] p-2 font-mono text-center text-[var(--text-h)] placeholder:text-[var(--placeholder-text)]"
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Enter Name"
@@ -138,7 +138,9 @@ function PlayPage() {
           <h1 className="text-center pt-4 m-0">Jeoparty</h1>
           <div className="flex-1 flex flex-col items-center justify-center gap-2">
             <Board categories={categories} size="compact" />
-            <p className="mt-6 font-mono">Choosing next question...</p>
+            <p className="mt-6 font-mono text-[var(--text-h)]">
+              Choosing next question ...
+            </p>
           </div>
         </div>
       )}
@@ -152,11 +154,19 @@ function PlayPage() {
               : ""
           }`}
         >
-          <h1 className="text-center pt-4 m-0">Jeoparty</h1>
+          <h1
+            className={`text-center pt-4 m-0 ${
+              revealed.question.state === "answered" ? "text-white" : ""
+            }`}
+          >
+            Jeoparty
+          </h1>
           <p
             className={`text-center my-8 text-sm font-mono uppercase ${
               revealed.question.state === "answered"
-                ? "text-gray-300"
+                ? mySubmission?.is_correct
+                  ? "text-[var(--correct-label)]"
+                  : "text-[var(--incorrect-label)]"
                 : "text-[var(--label-text)]"
             }`}
           >
@@ -180,7 +190,9 @@ function PlayPage() {
               <label
                 className={`text-sm font-mono uppercase mb-2 ${
                   revealed.question.state === "answered"
-                    ? "text-gray-300"
+                    ? mySubmission?.is_correct
+                      ? "text-[var(--correct-label)]"
+                      : "text-[var(--incorrect-label)]"
                     : "text-[var(--label-text)]"
                 }`}
               >
@@ -196,7 +208,7 @@ function PlayPage() {
             </div>
 
             {revealed.question.state === "revealed" && (
-              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-6">
                 {revealed.question.question_type === "multiple_choice" ? (
                   <>
                     <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
@@ -257,16 +269,22 @@ function PlayPage() {
             )}
 
             {revealed.question.state === "judging" && (
-              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
-                <p className="font-mono text-center text-[#6b93a6]">
-                  Host is judging...
+              <div className="w-full flex-1 min-h-0 flex flex-col items-center justify-center gap-2 mt-6">
+                <p className="font-mono text-center text-[var(--text-h)]">
+                  Host is judging 🧐 ...
                 </p>
               </div>
             )}
 
             {revealed.question.state === "answered" && (
-              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
-                <label className="text-gray-300 text-sm font-mono uppercase mb-2">
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-6">
+                <label
+                  className={`text-sm font-mono uppercase mb-2 ${
+                    mySubmission?.is_correct
+                      ? "text-[var(--correct-label)]"
+                      : "text-[var(--incorrect-label)]"
+                  }`}
+                >
                   Correct Answer
                 </label>
                 <h2 className="text-3xl text-white">
@@ -282,7 +300,7 @@ function PlayPage() {
                 >
                   {mySubmission?.is_correct
                     ? "You got it!"
-                    : "Better luck next time"}
+                    : "Better luck next time ..."}
                 </p>
               </div>
             )}

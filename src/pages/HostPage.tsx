@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
 import Leaderboard from "@/components/leaderboard";
+import AutoColumnList from "@/components/auto-column-list";
 
 function HostPage() {
   const { roomCode } = useParams();
@@ -225,16 +226,16 @@ function HostPage() {
           <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
             Players
           </label>
-          <ul className="flex flex-col items-center gap-2">
-            {players.map((player) => (
-              <li
-                key={player.id}
-                className="font-offbit text-3xl text-[var(--text-h)]"
-              >
+          <AutoColumnList
+            items={players}
+            getKey={(player) => player.id}
+            columnWidth={220}
+            renderItem={(player) => (
+              <p className="font-offbit text-3xl text-[var(--text-h)]">
                 {player.name}
-              </li>
-            ))}
-          </ul>
+              </p>
+            )}
+          />
         </div>
 
         <button
@@ -258,7 +259,9 @@ function HostPage() {
               size="compact"
               onQuestionClick={revealQuestion}
             />
-            <p className="mt-6 font-mono">Pick next question to reveal</p>
+            <p className="mt-6 font-mono text-[var(--text-h)]">
+              Pick next question to reveal
+            </p>
           </div>
         </div>
       )}
@@ -291,7 +294,7 @@ function HostPage() {
             </div>
 
             {revealed.question.state === "revealed" && (
-              <div className="w-full flex flex-col gap-2 mt-4">
+              <div className="w-full flex flex-col gap-2 mt-6">
                 <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
                   Submissions
                 </label>
@@ -302,7 +305,7 @@ function HostPage() {
             )}
 
             {revealed.question.state === "judging" && (
-              <div className="w-full flex-1 min-h-0 flex flex-col gap-2">
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-6">
                 <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
                   Submissions
                 </label>
@@ -340,11 +343,13 @@ function HostPage() {
             )}
 
             {revealed.question.state === "answered" && (
-              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
+              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-6">
                 <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
                   Correct Answer
                 </label>
-                <h2 className="text-3xl">{revealed.question.correct_answer}</h2>
+                <h2 className="text-3xl text-[var(--correct)]">
+                  {revealed.question.correct_answer}
+                </h2>
                 <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2 mt-4">
                   Who Got It Right?
                 </label>

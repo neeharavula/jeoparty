@@ -7,6 +7,7 @@ import { useSubmissions } from "@/hooks/useSubmissions";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
 import Leaderboard from "@/components/leaderboard";
+import AutoColumnList from "@/components/auto-column-list";
 
 function DisplayPage() {
   const { roomCode } = useParams();
@@ -41,16 +42,16 @@ function DisplayPage() {
           <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
             Players
           </label>
-          <ul className="flex flex-col items-center gap-2">
-            {players.map((player) => (
-              <li
-                key={player.id}
-                className="font-offbit text-3xl text-[var(--text-h)]"
-              >
+          <AutoColumnList
+            items={players}
+            getKey={(player) => player.id}
+            columnWidth={220}
+            renderItem={(player) => (
+              <p className="font-offbit text-3xl text-[var(--text-h)]">
                 {player.name}
-              </li>
-            ))}
-          </ul>
+              </p>
+            )}
+          />
         </div>
       </div>
     );
@@ -63,8 +64,10 @@ function DisplayPage() {
           <h1 className="text-center pt-4 m-0">Jeoparty</h1>
           <div className="flex-1 flex flex-col items-center justify-center gap-2">
             <Board categories={categories} size="full" />
-            <p className="mt-6 font-mono">Choosing next question...</p>
           </div>
+          <p className="font-mono text-center text-[var(--text-h)] pb-6">
+            Choosing next question ...
+          </p>
         </div>
       )}
 
@@ -75,7 +78,7 @@ function DisplayPage() {
             {revealed.category.name || "Untitled"} {revealed.question.points}
           </p>
           <div
-            className={`flex-1 flex flex-col items-center gap-2 px-6 pb-6 ${
+            className={`flex-1 flex flex-col items-center gap-2 px-6 pb-12 ${
               revealed.question.state === "revealed" ? "" : "justify-center"
             }`}
           >
@@ -88,68 +91,70 @@ function DisplayPage() {
                 <div className="flex-1" />
               </div>
             )}
-            <div className="w-full flex flex-col gap-2">
-              <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
+            <div className="w-full grid grid-cols-[1fr_auto_1fr] items-start gap-8">
+              <label className="text-[var(--label-text)] text-sm font-mono uppercase whitespace-nowrap">
                 Question
               </label>
-              <h2 className="text-3xl">{revealed.question.prompt}</h2>
+              <h2 className="text-5xl text-center max-w-4xl">
+                {revealed.question.prompt}
+              </h2>
             </div>
 
             {revealed.question.state === "judging" && (
-              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
-                <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
+              <div className="w-full flex-1 min-h-0 flex flex-col items-center gap-2 mt-6">
+                <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-4">
                   Submissions
                 </label>
                 {submissions.length === 0 ? (
-                  <p className="font-offbit text-3xl text-[var(--text-h)]">
+                  <p className="font-offbit text-4xl text-[var(--text-h)]">
                     None
                   </p>
                 ) : (
-                  submissions.map((submission) => (
-                    <div
-                      key={submission.id}
-                      className="bg-[#eeeeee] rounded-[10px] p-3"
-                    >
-                      <span className="font-offbit text-2xl text-[var(--text-h)]">
+                  <AutoColumnList
+                    items={submissions}
+                    getKey={(submission) => submission.id}
+                    renderItem={(submission) => (
+                      <p className="font-offbit text-4xl text-[var(--text-h)]">
                         {playerName(submission.player_id)}:{" "}
                         {submission.answer_text}
-                      </span>
-                    </div>
-                  ))
+                      </p>
+                    )}
+                  />
                 )}
                 <div className="flex-1" />
-                <p className="font-mono text-center text-[#6b93a6]">
-                  Host is judging...
+                <p className="font-mono text-center text-[var(--text-h)]">
+                  Host is judging 🧐 ...
                 </p>
               </div>
             )}
 
             {revealed.question.state === "answered" && (
-              <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
-                <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
-                  Correct Answer
-                </label>
-                <h2 className="text-3xl">
-                  {revealed.question.correct_answer}
-                </h2>
-                <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2 mt-4">
+              <div className="w-full flex-1 min-h-0 flex flex-col items-center gap-2 mt-6">
+                <div className="w-full grid grid-cols-[1fr_auto_1fr] items-start gap-8">
+                  <label className="text-[var(--label-text)] text-sm font-mono uppercase whitespace-nowrap">
+                    Correct Answer
+                  </label>
+                  <h2 className="text-5xl text-center text-[var(--correct)] max-w-4xl">
+                    {revealed.question.correct_answer}
+                  </h2>
+                </div>
+                <label className="text-[var(--label-text)] text-sm font-mono uppercase mt-4 mb-4">
                   Who Got It Right?
                 </label>
                 {submissions.some((submission) => submission.is_correct) ? (
-                  <ul className="flex flex-col gap-1">
-                    {submissions
-                      .filter((submission) => submission.is_correct)
-                      .map((submission) => (
-                        <li
-                          key={submission.id}
-                          className="font-offbit text-3xl text-[var(--text-h)]"
-                        >
-                          {playerName(submission.player_id)}
-                        </li>
-                      ))}
-                  </ul>
+                  <AutoColumnList
+                    items={submissions.filter(
+                      (submission) => submission.is_correct,
+                    )}
+                    getKey={(submission) => submission.id}
+                    renderItem={(submission) => (
+                      <p className="font-offbit text-4xl text-[var(--text-h)]">
+                        {playerName(submission.player_id)}
+                      </p>
+                    )}
+                  />
                 ) : (
-                  <p className="font-offbit text-3xl text-[var(--text-h)]">
+                  <p className="font-offbit text-4xl text-[var(--text-h)]">
                     No one
                   </p>
                 )}
@@ -159,7 +164,9 @@ function DisplayPage() {
         </div>
       )}
 
-      {game.status === "complete" && <Leaderboard players={players} />}
+      {game.status === "complete" && (
+        <Leaderboard players={players} textSize="text-5xl" />
+      )}
     </div>
   );
 }
