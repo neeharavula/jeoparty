@@ -246,7 +246,7 @@ function HostPage() {
               size="compact"
               onQuestionClick={revealQuestion}
             />
-            <p className="mt-6">Pick next question to reveal</p>
+            <p className="mt-6 font-mono">Pick next question to reveal</p>
           </div>
         </div>
       )}
@@ -254,7 +254,7 @@ function HostPage() {
       {game.status === "in_progress" && revealed && (
         <div className="min-h-screen flex flex-col">
           <h1 className="text-center pt-4 m-0">Jeoparty</h1>
-          <p className="text-center my-8 text-gray-400 text-sm font-mono">
+          <p className="text-center my-8 text-gray-400 text-sm font-mono uppercase">
             {revealed.category.name || "Untitled"} {revealed.question.points}
           </p>
           <div
@@ -272,16 +272,16 @@ function HostPage() {
               </div>
             )}
             <div className="w-full flex flex-col gap-2">
-              <label className="text-gray-400 text-xs font-mono mb-2">
-                QUESTION
+              <label className="text-gray-400 text-sm font-mono uppercase mb-2">
+                Question
               </label>
               <h2 className="text-3xl">{revealed.question.prompt}</h2>
             </div>
 
             {revealed.question.state === "revealed" && (
               <div className="w-full flex flex-col gap-2 mt-4">
-                <label className="text-gray-400 text-xs font-mono mb-2">
-                  SUBMISSIONS
+                <label className="text-gray-400 text-sm font-mono uppercase mb-2">
+                  Submissions
                 </label>
                 <p className="font-offbit text-3xl text-[var(--text-h)]">
                   {submissions.length}/{players.length}
@@ -291,16 +291,32 @@ function HostPage() {
 
             {revealed.question.state === "judging" && (
               <div className="w-full flex-1 min-h-0 flex flex-col gap-2">
-                {submissions.map((submission) => (
-                  <label key={submission.id}>
-                    <input
-                      type="checkbox"
-                      checked={markedCorrect.has(submission.id)}
-                      onChange={() => toggleCorrect(submission.id)}
-                    />
-                    {playerName(submission.player_id)}: {submission.answer_text}
-                  </label>
-                ))}
+                <label className="text-gray-400 text-sm font-mono uppercase mb-2">
+                  Submissions
+                </label>
+                {submissions.length === 0 ? (
+                  <p className="font-offbit text-3xl text-[var(--text-h)]">
+                    None
+                  </p>
+                ) : (
+                  submissions.map((submission) => (
+                    <label
+                      key={submission.id}
+                      className="flex items-center gap-3 bg-[#eeeeee] rounded-[10px] p-3 leading-none"
+                    >
+                      <input
+                        type="checkbox"
+                        className="m-0 size-4 shrink-0"
+                        checked={markedCorrect.has(submission.id)}
+                        onChange={() => toggleCorrect(submission.id)}
+                      />
+                      <span className="font-offbit text-2xl text-[var(--text-h)]">
+                        {playerName(submission.player_id)}:{" "}
+                        {submission.answer_text}
+                      </span>
+                    </label>
+                  ))
+                )}
                 <div className="flex-1" />
                 <button
                   className="bg-[#6b93a6] font-mono text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer w-full"
@@ -313,28 +329,34 @@ function HostPage() {
 
             {revealed.question.state === "answered" && (
               <div className="w-full flex-1 min-h-0 flex flex-col gap-2 mt-4">
-                <label className="text-gray-400 text-xs font-mono mb-2">
-                  CORRECT ANSWER
+                <label className="text-gray-400 text-sm font-mono uppercase mb-2">
+                  Correct Answer
                 </label>
                 <h2 className="text-3xl">{revealed.question.correct_answer}</h2>
-                <label className="text-gray-400 text-xs font-mono mb-2 mt-4">
-                  WHO GOT IT RIGHT?
+                <label className="text-gray-400 text-sm font-mono uppercase mb-2 mt-4">
+                  Who Got It Right?
                 </label>
-                <ul className="flex flex-col gap-1">
-                  {submissions
-                    .filter((submission) => submission.is_correct)
-                    .map((submission) => (
-                      <li
-                        key={submission.id}
-                        className="font-offbit text-3xl text-[var(--text-h)]"
-                      >
-                        {playerName(submission.player_id)}
-                      </li>
-                    ))}
-                </ul>
+                {submissions.some((submission) => submission.is_correct) ? (
+                  <ul className="flex flex-col gap-1">
+                    {submissions
+                      .filter((submission) => submission.is_correct)
+                      .map((submission) => (
+                        <li
+                          key={submission.id}
+                          className="font-offbit text-3xl text-[var(--text-h)]"
+                        >
+                          {playerName(submission.player_id)}
+                        </li>
+                      ))}
+                  </ul>
+                ) : (
+                  <p className="font-offbit text-3xl text-[var(--text-h)]">
+                    No one
+                  </p>
+                )}
                 <div className="flex-1" />
                 <button
-                  className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer"
+                  className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono"
                   onClick={nextQuestion}
                 >
                   Next

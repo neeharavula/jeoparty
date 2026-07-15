@@ -27,6 +27,14 @@
   --category-3: #dcac8e;
   --category-4: #f0d89d;
   --category-5: #ecb9c6;
+  --correct: #6cab70;
+  --incorrect: #e3496d;
+  --correct-text: #324d34;
+  --incorrect-text: #913047;
+  --tile-unplayed-bg: #dcdcdc;
+  --tile-played-bg: #eeeeee;
+  --tile-unplayed-text: var(--text);
+  --tile-played-text: #e5e7eb;
 }
 
 @layer base {

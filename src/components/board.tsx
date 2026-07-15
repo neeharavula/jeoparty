@@ -43,20 +43,22 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
                 isCompact
                   ? `w-12 h-12 rounded-[6px] ${
                       question.state === "unplayed"
-                        ? "bg-[#dcdcdc]"
-                        : "bg-[#eeeeee]"
+                        ? "bg-[var(--tile-unplayed-bg)]"
+                        : "bg-[var(--tile-played-bg)]"
                     } ${onQuestionClick ? "cursor-pointer" : ""}`
                   : `p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 ${
                       question.state === "unplayed"
-                        ? "bg-[#dcdcdc]"
-                        : "bg-[#eeeeee]"
+                        ? "bg-[var(--tile-unplayed-bg)]"
+                        : "bg-[var(--tile-played-bg)]"
                     } ${onQuestionClick ? "cursor-pointer" : ""}`
               }
             >
               {!isCompact && (
                 <span
                   className={`font-offbit text-lg tracking-wider ${
-                    question.state === "unplayed" ? "" : "text-gray-200"
+                    question.state === "unplayed"
+                      ? "text-[var(--tile-unplayed-text)]"
+                      : "text-[var(--tile-played-text)]"
                   }`}
                 >
                   {question.points}

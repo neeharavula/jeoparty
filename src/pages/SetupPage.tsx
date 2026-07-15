@@ -336,8 +336,8 @@ function SetupPage() {
                   setEditingQuestionId(isOpen ? question.id : null)
                 }
               >
-                <DialogTrigger className="bg-[#dcdcdc] p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer">
-                  <span className="font-offbit text-lg tracking-wider">
+                <DialogTrigger className="bg-[var(--tile-unplayed-bg)] p-5 rounded-[10px] w-full shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer">
+                  <span className="font-offbit text-lg tracking-wider text-[var(--tile-unplayed-text)]">
                     {question.points}
                   </span>
                 </DialogTrigger>
