@@ -7,6 +7,7 @@ import {
 } from "@/components/motion-primitives/dialog";
 import { supabase } from "@/lib/supabaseClient";
 import { getCategoryColorClass } from "@/lib/board";
+import LoadBoard from "@/components/load-board";
 
 /* base for all question types */
 type BaseQuestion = {
@@ -299,25 +300,6 @@ function SetupPage() {
     <div className="min-h-screen flex flex-col">
       <h1 className="text-center pt-4 m-0">Jeoparty</h1>
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
-      <div className="flex flex-col items-center gap-1 font-mono text-sm">
-        <div className="flex gap-2">
-          <input
-            className="bg-[#dcdcdc] rounded-[10px] p-2 border-none font-mono text-sm text-center text-[var(--placeholder-text)]"
-            placeholder="Past Game Code"
-            value={loadRoomCode}
-            onChange={(event) => setLoadRoomCode(event.target.value)}
-          />
-          <button
-            className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer"
-            onClick={loadQuestionSet}
-            disabled={isLoadingSet || !loadRoomCode.trim()}
-          >
-            {isLoadingSet ? "Loading..." : "Load Board"}
-          </button>
-        </div>
-        {loadError && <p className="text-xs text-red-500">{loadError}</p>}
-      </div>
-
       <div className="flex justify-center gap-6 font-mono text-sm">
         {categories.map((category, categoryIndex) => (
           <div key={category.id} className="flex flex-col gap-4 w-48">
@@ -349,7 +331,7 @@ function SetupPage() {
                     </p>
                     <label className="text-gray-400 text-xs">Type</label>
                     <select
-                      className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
+                      className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--text-h)]"
                       value={question.questionType}
                       onChange={(event) =>
                         selectQuestionType(
@@ -365,7 +347,7 @@ function SetupPage() {
 
                     <label className="text-gray-400 text-xs">Question</label>
                     <textarea
-                      className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
+                      className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--text-h)]"
                       value={question.prompt}
                       onChange={(event) =>
                         updateQuestion(category.id, question.id, (q) => ({
@@ -379,7 +361,7 @@ function SetupPage() {
                       <>
                         <label className="text-gray-400 text-xs">Answer</label>
                         <textarea
-                          className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
+                          className="bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--text-h)]"
                           value={question.correctAnswer}
                           onChange={(event) =>
                             updateQuestion(category.id, question.id, (q) => ({
@@ -407,7 +389,7 @@ function SetupPage() {
                               }
                             />
                             <textarea
-                              className="flex-1 bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--placeholder-text)]"
+                              className="flex-1 bg-[#dcdcdc] rounded-[10px] p-2 text-[var(--text-h)]"
                               value={choice}
                               onChange={(event) =>
                                 updateQuestion(
@@ -451,13 +433,23 @@ function SetupPage() {
         ))}
       </div>
 
-      <button
-        className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono text-sm"
-        onClick={generateGame}
-        disabled={isGenerating}
-      >
-        {isGenerating ? "Generating..." : "Generate Game"}
-      </button>
+      <div className="flex items-start gap-2">
+        <button
+          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono text-sm"
+          onClick={generateGame}
+          disabled={isGenerating}
+        >
+          {isGenerating ? "Generating..." : "Generate Game"}
+        </button>
+
+        <LoadBoard
+          roomCode={loadRoomCode}
+          onRoomCodeChange={setLoadRoomCode}
+          onSubmit={loadQuestionSet}
+          isLoading={isLoadingSet}
+          error={loadError}
+        />
+      </div>
 
       {gameLinks && (
         <div className="flex gap-8 font-mono text-sm">
@@ -468,7 +460,7 @@ function SetupPage() {
               { label: "Display", url: gameLinks.display },
             ] as const
           ).map(({ label, url }) => (
-            <div key={label} className="flex items-center gap-1">
+            <div key={label} className="flex items-center gap-2">
               <a href={url} target="_blank" rel="noopener noreferrer">
                 {label}
               </a>
