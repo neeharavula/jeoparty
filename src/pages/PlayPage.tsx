@@ -139,7 +139,7 @@ function PlayPage() {
           <div className="flex-1 flex flex-col items-center justify-center gap-2">
             <Board categories={categories} size="compact" />
             <p className="mt-6 font-mono text-[var(--text-h)]">
-              Choosing next question ...
+              Choosing question ...
             </p>
           </div>
         </div>

@@ -96,7 +96,7 @@ function DisplayPage() {
             <Board categories={categories} size="full" />
           </div>
           <p className="font-mono text-center text-[var(--text-h)] text-base 2xl:text-2xl pb-12">
-            Choosing next question ...
+            Choosing question ...
           </p>
         </div>
       )}
@@ -126,7 +126,7 @@ function DisplayPage() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-6 flex justify-center">
               <h2
                 ref={questionRef}
-                className="text-[56px] 2xl:text-[96px] text-center max-w-4xl 2xl:max-w-6xl"
+                className="text-[56px] 2xl:text-[96px] text-center max-w-5xl 2xl:max-w-6xl"
               >
                 {revealed.question.prompt}
               </h2>
@@ -180,26 +180,6 @@ function DisplayPage() {
                       {revealed.question.correct_answer}
                     </h2>
                   </div>
-                  <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mt-4 mb-4">
-                    Who Got It Right?
-                  </label>
-                  {submissions.some((submission) => submission.is_correct) ? (
-                    <AutoColumnList
-                      items={submissions.filter(
-                        (submission) => submission.is_correct,
-                      )}
-                      getKey={(submission) => submission.id}
-                      renderItem={(submission) => (
-                        <p className="font-offbit text-4xl 2xl:text-6xl text-[var(--text-h)]">
-                          {playerName(submission.player_id)}
-                        </p>
-                      )}
-                    />
-                  ) : (
-                    <p className="font-offbit text-4xl 2xl:text-6xl text-[var(--text-h)]">
-                      No one
-                    </p>
-                  )}
                 </div>
               )}
             </div>
