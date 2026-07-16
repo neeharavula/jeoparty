@@ -34,7 +34,7 @@ function LoadBoard({
     <MotionConfig transition={transition}>
       <div ref={containerRef} className="flex flex-col items-center gap-1">
         <motion.div
-          animate={{ width: isOpen ? 220 : 130 }}
+          animate={{ width: isOpen ? 220 : 145 }}
           initial={false}
           className={`overflow-hidden rounded-[10px] shadow-sm ${
             isOpen
@@ -45,7 +45,7 @@ function LoadBoard({
           {!isOpen ? (
             <button
               type="button"
-              className="flex h-9 w-full items-center justify-center text-white cursor-pointer font-mono text-sm"
+              className="flex w-full items-center justify-center p-2 text-white cursor-pointer font-mono text-base"
               onClick={() => setIsOpen(true)}
             >
               Load Board
@@ -54,7 +54,7 @@ function LoadBoard({
             <div className="flex items-center gap-1 p-1">
               <button
                 type="button"
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] text-[var(--text-h)] cursor-pointer"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] text-[var(--text-h)] cursor-pointer"
                 onClick={() => setIsOpen(false)}
                 aria-label="Back"
               >
@@ -62,7 +62,7 @@ function LoadBoard({
               </button>
               <input
                 autoFocus
-                className="h-7 w-full rounded-[8px] bg-transparent px-2 font-mono text-sm text-center text-[var(--text-h)] placeholder:text-[var(--placeholder-text)] focus:outline-none"
+                className="h-8 w-full rounded-[8px] bg-transparent px-2 font-mono text-sm text-center text-[var(--text-h)] placeholder:text-[var(--placeholder-text)] focus:outline-none"
                 placeholder="Past Game Code"
                 value={roomCode}
                 onChange={(event) => onRoomCodeChange(event.target.value)}
@@ -72,7 +72,7 @@ function LoadBoard({
               />
               <button
                 type="button"
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] text-white bg-[#6b93a6] cursor-pointer disabled:opacity-50"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] text-white bg-[#6b93a6] cursor-pointer disabled:opacity-50"
                 onClick={handleSubmit}
                 disabled={isLoading || !roomCode.trim()}
                 aria-label="Load board"

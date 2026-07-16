@@ -298,7 +298,7 @@ function SetupPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <h1 className="text-center pt-4 m-0">Jeoparty</h1>
+      <h1 className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
       <div className="flex justify-center gap-6 font-mono text-sm">
         {categories.map((category, categoryIndex) => (
@@ -433,9 +433,9 @@ function SetupPage() {
         ))}
       </div>
 
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-6 mt-6">
         <button
-          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono text-sm"
+          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono text-base"
           onClick={generateGame}
           disabled={isGenerating}
         >
@@ -452,7 +452,7 @@ function SetupPage() {
       </div>
 
       {gameLinks && (
-        <div className="flex gap-8 font-mono text-sm">
+        <div className="flex gap-8 font-mono text-base">
           {(
             [
               { label: "Play", url: gameLinks.play },
