@@ -37,17 +37,24 @@ function PlayPage() {
 
   useEffect(() => {
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (!meta) return;
 
-    if (revealed?.question.state === "answered") {
-      const varName = mySubmission?.is_correct ? "--correct" : "--incorrect";
-      const color = getComputedStyle(document.documentElement)
-        .getPropertyValue(varName)
-        .trim();
-      meta.setAttribute("content", color);
-    } else {
-      meta.setAttribute("content", "#ffffff");
-    }
+    const color =
+      revealed?.question.state === "answered"
+        ? getComputedStyle(document.documentElement)
+            .getPropertyValue(
+              mySubmission?.is_correct ? "--correct" : "--incorrect",
+            )
+            .trim()
+        : "#ffffff";
+
+    meta?.setAttribute("content", color);
+    document.documentElement.style.backgroundColor = color;
+    document.body.style.backgroundColor = color;
+
+    return () => {
+      document.documentElement.style.backgroundColor = "";
+      document.body.style.backgroundColor = "";
+    };
   }, [revealed?.question.state, mySubmission?.is_correct]);
 
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
