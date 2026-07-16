@@ -206,7 +206,11 @@ function HostPage() {
   }
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   if (!game) {
