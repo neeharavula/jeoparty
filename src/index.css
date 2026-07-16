@@ -3,8 +3,10 @@
 @font-face {
   font-family: "Offbit Trail";
   src:
-    url("/fonts/OffBit-Bold.woff2") format("woff2"),
-    url("/fonts/OffBit-Bold.woff") format("woff");
+    url("https://0avbe8driu0w6yak.public.blob.vercel-storage.com/OffBit-Bold.woff2")
+      format("woff2"),
+    url("https://0avbe8driu0w6yak.public.blob.vercel-storage.com/OffBit-Bold.woff")
+      format("woff");
   font-weight: normal;
   font-style: normal;
 }
