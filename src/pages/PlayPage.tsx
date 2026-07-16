@@ -146,7 +146,7 @@ function PlayPage() {
       )}
       {game.status === "in_progress" && revealed && (
         <div
-          className={`min-h-screen flex flex-col ${
+          className={`min-h-dvh flex flex-col ${
             revealed.question.state === "answered"
               ? mySubmission?.is_correct
                 ? "bg-[var(--correct)]"
