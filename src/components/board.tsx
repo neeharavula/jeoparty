@@ -28,7 +28,7 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
             className={`${getCategoryColorClass(index)} ${
               isCompact
                 ? "rounded-[6px] h-6 w-12"
-                : "p-3 rounded-[10px] text-center font-offbit text-xl text-[var(--category-header-text)] shadow-sm transition-transform duration-300 ease-out hover:scale-95"
+                : "p-3 rounded-[10px] text-center font-offbit text-xl 2xl:text-3xl text-[var(--category-header-text)] shadow-sm transition-transform duration-300 ease-out hover:scale-95"
             }`}
           >
             {!isCompact && (category.name || "Untitled")}
@@ -55,7 +55,7 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
             >
               {!isCompact && (
                 <span
-                  className={`font-offbit text-xl tracking-wider ${
+                  className={`font-offbit text-xl 2xl:text-3xl tracking-wider ${
                     question.state === "unplayed"
                       ? "text-[var(--tile-unplayed-text)]"
                       : "text-[var(--tile-played-text)]"

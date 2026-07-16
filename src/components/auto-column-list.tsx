@@ -56,7 +56,11 @@ function AutoColumnList<T>({
       </div>
       <div className="w-full flex justify-center" style={{ gap: gap * 2 }}>
         {chunks.map((chunk, index) => (
-          <div key={index} className="flex flex-col" style={{ gap }}>
+          <div
+            key={index}
+            className="flex flex-col items-center"
+            style={{ gap }}
+          >
             {chunk.map((item) => (
               <div key={getKey(item)}>{renderItem(item)}</div>
             ))}
