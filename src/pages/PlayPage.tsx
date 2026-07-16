@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "@/hooks/useGame";
 import { usePlayers } from "@/hooks/usePlayers";
@@ -34,6 +34,21 @@ function PlayPage() {
   const mySubmission = submissions.find(
     (submission) => submission.player_id === player?.id,
   );
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+
+    if (revealed?.question.state === "answered") {
+      const varName = mySubmission?.is_correct ? "--correct" : "--incorrect";
+      const color = getComputedStyle(document.documentElement)
+        .getPropertyValue(varName)
+        .trim();
+      meta.setAttribute("content", color);
+    } else {
+      meta.setAttribute("content", "#ffffff");
+    }
+  }, [revealed?.question.state, mySubmission?.is_correct]);
 
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [freeTextInput, setFreeTextInput] = useState("");
