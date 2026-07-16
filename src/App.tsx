@@ -1,4 +1,3 @@
-//import { supabase } from "./lib/supabaseClient";
 import { Routes, Route, Navigate } from "react-router-dom";
 import SetupPage from "./pages/SetupPage";
 import HostPage from "./pages/HostPage";
