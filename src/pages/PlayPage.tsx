@@ -268,7 +268,7 @@ function PlayPage() {
                       onClick={() => submitAnswer(selectedChoice ?? "")}
                       disabled={!selectedChoice || secondsLeft === 0}
                     >
-                      Submit
+                      {mySubmission ? "Submitted!" : "Submit"}
                     </button>
                   </>
                 ) : (
@@ -287,7 +287,7 @@ function PlayPage() {
                       onClick={() => submitAnswer(freeTextInput)}
                       disabled={!freeTextInput.trim() || secondsLeft === 0}
                     >
-                      Submit
+                      {mySubmission ? "Submitted!" : "Submit"}
                     </button>
                   </>
                 )}
