@@ -297,7 +297,22 @@ function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
+      <div className="min-h-screen relative flex lg:hidden flex-col items-center justify-center gap-4">
+        <h1 className="absolute top-0 left-0 w-full text-center pt-4">
+          Jeoparty
+        </h1>
+        <p className="text-center font-mono">
+          Hi there! 👋
+        </p>
+        <p className="text-center font-mono">
+          For the best experience,<br/>
+          set up a game on desktop,<br/>
+          host and play on mobile.
+        </p>
+      </div>
+
+      <div className="hidden lg:flex min-h-screen flex-col">
       <h1 className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
       <div className="flex justify-center gap-6 font-mono text-sm">
@@ -480,7 +495,8 @@ function SetupPage() {
         </div>
       )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 
