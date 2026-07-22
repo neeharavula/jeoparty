@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Copy, Check } from "lucide-react";
 import {
   Dialog,
@@ -154,6 +154,25 @@ function SetupPage() {
   const [loadRoomCode, setLoadRoomCode] = useState("");
   const [isLoadingSet, setIsLoadingSet] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  const headerRef = useRef<HTMLHeadingElement>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const [editHintTop, setEditHintTop] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    function updateEditHintTop() {
+      const header = headerRef.current;
+      const board = boardRef.current;
+      if (!header || !board) return;
+      const headerBottom = header.getBoundingClientRect().bottom;
+      const boardTop = board.getBoundingClientRect().top;
+      setEditHintTop((headerBottom + boardTop) / 2);
+    }
+
+    updateEditHintTop();
+    window.addEventListener("resize", updateEditHintTop);
+    return () => window.removeEventListener("resize", updateEditHintTop);
+  }, [categories]);
 
   function copyLink(url: string) {
     navigator.clipboard.writeText(url);
@@ -312,10 +331,18 @@ function SetupPage() {
         </p>
       </div>
 
-      <div className="hidden lg:flex min-h-screen flex-col">
-      <h1 className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
+      <div className="hidden lg:flex min-h-screen relative flex-col">
+      <h1 ref={headerRef} className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
+      {editHintTop !== null && (
+        <label
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--label-text)] text-sm font-mono uppercase whitespace-nowrap"
+          style={{ top: editHintTop }}
+        >
+          Click on a card to edit
+        </label>
+      )}
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
-      <div className="flex justify-center gap-6 font-mono text-sm">
+      <div ref={boardRef} className="flex justify-center gap-6 font-mono text-sm">
         {categories.map((category, categoryIndex) => (
           <div key={category.id} className="flex flex-col gap-4 w-48">
             <input
