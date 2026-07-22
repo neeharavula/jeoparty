@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@fontsource/geist-mono/400.css";
+@import "@fontsource/geist-sans/400.css";
 @font-face {
   font-family: "Offbit Trail";
   src:
@@ -12,8 +13,9 @@
 }
 
 @theme {
-  --font-mono: "Geist Mono", ui-monospace, Consolas, monospace;
+  --font-mono: "Geist Sans", ui-sans-serif, system-ui, sans-serif;
   --font-offbit: "Offbit Trail", "Geist Mono", ui-monospace, monospace;
+  --font-geist: "Geist Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -81,7 +83,14 @@
   p {
     margin: 0;
   }
-  .uppercase {
-    letter-spacing: 0.08em;
-  }
+}
+
+/* unlayered so these beat the layered .font-mono/.uppercase Tailwind utilities */
+.font-mono {
+  letter-spacing: 0.05em;
+}
+
+.uppercase {
+  font-family: var(--font-geist);
+  letter-spacing: 0.15em;
 }
