@@ -64,7 +64,6 @@
   }
   h1 {
     font-size: 56px;
-    /*letter-spacing: 2px;*/
     margin: 32px 0;
     @media (max-width: 1024px) {
       font-size: 36px;
@@ -85,7 +84,6 @@
   }
 }
 
-/* unlayered so these beat the layered .font-mono/.uppercase Tailwind utilities */
 .font-mono {
   letter-spacing: 0.05em;
 }

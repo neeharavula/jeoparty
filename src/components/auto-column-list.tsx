@@ -10,8 +10,6 @@ type AutoColumnListProps<T> = {
   gap?: number;
 };
 
-/* renders items in as few centered columns as fit, filling one column
-   top-to-bottom before starting the next, growing up to maxColumns */
 function AutoColumnList<T>({
   items,
   getKey,
