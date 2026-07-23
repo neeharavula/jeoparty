@@ -14,14 +14,14 @@ function Board({ categories, size = "full", onQuestionClick }: BoardProps) {
       className={
         isCompact
           ? "flex justify-center gap-2 font-mono text-xs"
-          : "flex justify-center gap-6 font-mono text-sm"
+          : "flex justify-center gap-4 font-mono text-sm"
       }
     >
       {categories.map((category, index) => (
         <div
           key={category.id}
           className={
-            isCompact ? "flex flex-col gap-2" : "flex flex-col gap-4 w-48"
+            isCompact ? "flex flex-col gap-2" : "flex flex-col gap-3 w-48"
           }
         >
           <div

@@ -335,16 +335,16 @@ function SetupPage() {
       <h1 ref={headerRef} className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
       {editHintTop !== null && (
         <label
-          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--label-text)] text-sm font-mono uppercase whitespace-nowrap"
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--label-text)] text-xs font-mono uppercase whitespace-nowrap"
           style={{ top: editHintTop }}
         >
           Click on a card to edit
         </label>
       )}
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
-      <div ref={boardRef} className="flex justify-center gap-6 font-mono text-sm">
+      <div ref={boardRef} className="flex justify-center gap-4 font-mono text-sm">
         {categories.map((category, categoryIndex) => (
-          <div key={category.id} className="flex flex-col gap-4 w-48">
+          <div key={category.id} className="flex flex-col gap-3 w-48">
             <input
               className={`${getCategoryColorClass(categoryIndex)} p-3 rounded-[10px] border-none font-offbit text-xl text-center text-[var(--category-header-text)] shadow-sm transition-transform duration-300 ease-out hover:scale-95`}
               placeholder="Category"
@@ -368,7 +368,7 @@ function SetupPage() {
                 </DialogTrigger>
                 <DialogContent className="font-mono text-xs p-5 w-96">
                   <div className="flex flex-col gap-3">
-                    <p className="text-center">
+                    <p className="text-center text-xs font-mono uppercase text-[var(--text-h)]">
                       {category.name || "Untitled"} {question.points}
                     </p>
                     <label className="text-gray-400 text-xs">Type</label>
