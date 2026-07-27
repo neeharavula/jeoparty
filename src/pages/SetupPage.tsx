@@ -505,7 +505,7 @@ function SetupPage() {
         </div>
       )}
 
-      {!isGenerating && gameLinks && (
+      {!isGenerating && gameLinks?.roomCode && (
         <p className="font-mono text-sm text-[var(--text-h)]">
           Game Code: {gameLinks.roomCode}
         </p>
