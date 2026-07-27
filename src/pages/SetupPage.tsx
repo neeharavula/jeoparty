@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 import {
   Dialog,
@@ -134,6 +134,7 @@ function generateRoomCode(): string {
 }
 
 type GameLinks = {
+  roomCode: string;
   play: string;
   host: string;
   display: string;
@@ -156,25 +157,6 @@ function SetupPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-
-  const headerRef = useRef<HTMLHeadingElement>(null);
-  const boardRef = useRef<HTMLDivElement>(null);
-  const [editHintTop, setEditHintTop] = useState<number | null>(null);
-
-  useLayoutEffect(() => {
-    function updateEditHintTop() {
-      const header = headerRef.current;
-      const board = boardRef.current;
-      if (!header || !board) return;
-      const headerBottom = header.getBoundingClientRect().bottom;
-      const boardTop = board.getBoundingClientRect().top;
-      setEditHintTop((headerBottom + boardTop) / 2);
-    }
-
-    updateEditHintTop();
-    window.addEventListener("resize", updateEditHintTop);
-    return () => window.removeEventListener("resize", updateEditHintTop);
-  }, [categories]);
 
   function copyLink(url: string) {
     navigator.clipboard.writeText(url);
@@ -254,6 +236,7 @@ function SetupPage() {
 
     const origin = window.location.origin;
     const links = {
+      roomCode,
       play: `${origin}/play/${roomCode}`,
       host: `${origin}/host/${roomCode}`,
       display: `${origin}/display/${roomCode}`,
@@ -334,17 +317,9 @@ function SetupPage() {
       </div>
 
       <div className="hidden lg:flex min-h-screen relative flex-col">
-      <h1 ref={headerRef} className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
-      {editHintTop !== null && (
-        <label
-          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--label-text)] text-xs font-mono uppercase whitespace-nowrap"
-          style={{ top: editHintTop }}
-        >
-          Click on a card to edit
-        </label>
-      )}
+      <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
       <div className="flex-1 flex flex-col items-center justify-center gap-4">
-      <div ref={boardRef} className="flex justify-center gap-4 font-mono text-sm">
+      <div className="flex justify-center gap-4 font-mono text-sm">
         {categories.map((category, categoryIndex) => (
           <div key={category.id} className="flex flex-col gap-3 w-48">
             <input
@@ -496,13 +471,13 @@ function SetupPage() {
       </div>
 
       {isGenerating && (
-        <p className="font-mono text-base text-[var(--text-h)]">
+        <p className="font-mono text-sm text-[var(--text-h)]">
           Generating...
         </p>
       )}
 
       {!isGenerating && gameLinks && (
-        <div className="flex gap-8 font-mono text-base">
+        <div className="flex gap-8 font-mono text-sm">
           {(
             [
               { label: "Play", url: gameLinks.play },
@@ -530,6 +505,12 @@ function SetupPage() {
         </div>
       )}
 
+      {!isGenerating && gameLinks && (
+        <p className="font-mono text-sm text-[var(--text-h)]">
+          Game Code: {gameLinks.roomCode}
+        </p>
+      )}
+
       <Dialog open={isInfoOpen} onOpenChange={setIsInfoOpen}>
         <DialogTrigger className="absolute bottom-6 left-6 text-[var(--label-text)] text-xs font-mono uppercase cursor-pointer">
           Info
@@ -537,11 +518,11 @@ function SetupPage() {
         <DialogContent className="font-mono text-base p-8 w-96">
           <div className="flex flex-col gap-6">
             <p className="text-center font-offbit text-xl">Info</p>
-            <p className="text-center text-xs">
+            <p className="text-center text-sm">
               Jeoparty is a multiplayer, Jeopardy-style trivia game designed
               for parties or game nights.
             </p>
-            <ul className="flex flex-col gap-1 list-disc pl-5 text-xs">
+            <ul className="flex flex-col gap-1 list-disc pl-5 text-sm">
               <li>👩🏻‍💻 Host controls the board and judges answers</li>
               <li>📱 Players buzz in and answer from their own phones</li>
               <li>
@@ -549,7 +530,7 @@ function SetupPage() {
                 displayed on the TV for everyone to watch together
               </li>
             </ul>
-            <p className="text-xs text-center">Developed by <a href="https://neeharavula.com/" target="blank" className="hover:text-[#6b93a6]">Neeha Ravula</a></p>
+            <p className="text-sm text-center">Developed by <a href="https://neeharavula.com/" target="blank" className="hover:text-[#6b93a6]">Neeha Ravula</a></p>
           </div>
         </DialogContent>
       </Dialog>
@@ -561,12 +542,12 @@ function SetupPage() {
         <DialogContent className="font-mono text-base p-8 w-96">
           <div className="flex flex-col gap-6">
             <p className="text-center font-offbit text-xl">Help</p>
-            <p className="text-center text-xs">
+            <p className="text-center text-sm">
               To create a new Jeoparty game, fill out the board with
               questions and answers by clicking on the board tiles, or load
               questions from a previous game via game code.
             </p>
-            <p className="text-center text-xs">Once the board is
+            <p className="text-center text-sm">Once the board is
               loaded, click on <span className="text-[#6b93a6] text-bold">Generate Game</span> to generate the game links for
               each mode (Play, Host, Display).</p>
           </div>

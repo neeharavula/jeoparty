@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { motion, MotionConfig } from "motion/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useClickOutside } from "@/hooks/useClickOutside";
@@ -22,8 +22,16 @@ function LoadBoard({
 }: LoadBoardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [closedWidth, setClosedWidth] = useState<number | null>(null);
 
   useClickOutside(containerRef, () => setIsOpen(false));
+
+  useLayoutEffect(() => {
+    if (buttonRef.current) {
+      setClosedWidth(buttonRef.current.getBoundingClientRect().width);
+    }
+  }, []);
 
   function handleSubmit() {
     if (!roomCode.trim() || isLoading) return;
@@ -34,7 +42,7 @@ function LoadBoard({
     <MotionConfig transition={transition}>
       <div ref={containerRef} className="flex flex-col items-center gap-1">
         <motion.div
-          animate={{ width: isOpen ? 220 : "auto" }}
+          animate={{ width: isOpen ? 220 : (closedWidth ?? "auto") }}
           initial={false}
           className={`overflow-hidden rounded-[10px] shadow-sm ${
             isOpen
@@ -44,8 +52,9 @@ function LoadBoard({
         >
           {!isOpen ? (
             <button
+              ref={buttonRef}
               type="button"
-              className="flex w-full items-center justify-center px-4 py-2 text-white cursor-pointer font-mono text-sm"
+              className="flex w-full items-center justify-center px-4 py-2 text-white cursor-pointer font-mono text-sm whitespace-nowrap"
               onClick={() => setIsOpen(true)}
             >
               Load Board
