@@ -534,8 +534,23 @@ function SetupPage() {
         <DialogTrigger className="absolute bottom-6 left-6 text-[var(--label-text)] text-xs font-mono uppercase cursor-pointer">
           Info
         </DialogTrigger>
-        <DialogContent className="font-mono text-xs p-5 w-96">
-          <div className="flex flex-col gap-3" />
+        <DialogContent className="font-mono text-base p-8 w-96">
+          <div className="flex flex-col gap-6">
+            <p className="text-center font-offbit text-xl">Info</p>
+            <p className="text-center text-xs">
+              Jeoparty is a multiplayer, Jeopardy-style trivia game designed
+              for parties or game nights.
+            </p>
+            <ul className="flex flex-col gap-1 list-disc pl-5 text-xs">
+              <li>👩🏻‍💻 Host controls the board and judges answers</li>
+              <li>📱 Players buzz in and answer from their own phones</li>
+              <li>
+                📺 The live board, questions, and leaderboard are
+                displayed on the TV for everyone to watch together
+              </li>
+            </ul>
+            <p className="text-xs text-center">Developed by <a href="https://neeharavula.com/" target="blank" className="hover:text-[#6b93a6]">Neeha Ravula</a></p>
+          </div>
         </DialogContent>
       </Dialog>
 
