@@ -558,8 +558,18 @@ function SetupPage() {
         <DialogTrigger className="absolute bottom-6 right-6 text-[var(--label-text)] text-xs font-mono uppercase cursor-pointer">
           Help
         </DialogTrigger>
-        <DialogContent className="font-mono text-xs p-5 w-96">
-          <div className="flex flex-col gap-3" />
+        <DialogContent className="font-mono text-base p-8 w-96">
+          <div className="flex flex-col gap-6">
+            <p className="text-center font-offbit text-xl">Help</p>
+            <p className="text-center text-xs">
+              To create a new Jeoparty game, fill out the board with
+              questions and answers by clicking on the board tiles, or load
+              questions from a previous game via game code.
+            </p>
+            <p className="text-center text-xs">Once the board is
+              loaded, click on <span className="text-[#6b93a6] text-bold">Generate Game</span> to generate the game links for
+              each mode (Play, Host, Display).</p>
+          </div>
         </DialogContent>
       </Dialog>
       </div>
