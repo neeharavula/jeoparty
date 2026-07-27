@@ -154,6 +154,8 @@ function SetupPage() {
   const [loadRoomCode, setLoadRoomCode] = useState("");
   const [isLoadingSet, setIsLoadingSet] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const headerRef = useRef<HTMLHeadingElement>(null);
   const boardRef = useRef<HTMLDivElement>(null);
@@ -527,6 +529,24 @@ function SetupPage() {
           ))}
         </div>
       )}
+
+      <Dialog open={isInfoOpen} onOpenChange={setIsInfoOpen}>
+        <DialogTrigger className="absolute bottom-6 left-6 text-[var(--label-text)] text-xs font-mono uppercase cursor-pointer">
+          Info
+        </DialogTrigger>
+        <DialogContent className="font-mono text-xs p-5 w-96">
+          <div className="flex flex-col gap-3" />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
+        <DialogTrigger className="absolute bottom-6 right-6 text-[var(--label-text)] text-xs font-mono uppercase cursor-pointer">
+          Help
+        </DialogTrigger>
+        <DialogContent className="font-mono text-xs p-5 w-96">
+          <div className="flex flex-col gap-3" />
+        </DialogContent>
+      </Dialog>
       </div>
       </div>
     </>
