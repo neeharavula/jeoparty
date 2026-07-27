@@ -345,7 +345,7 @@ function SetupPage() {
                 </DialogTrigger>
                 <DialogContent className="font-mono text-xs p-5 w-96">
                   <div className="flex flex-col gap-3">
-                    <p className="text-center text-xs font-mono uppercase text-[var(--text-h)]">
+                    <p className="text-center font-offbit text-xl text-[var(--text-h)]">
                       {category.name || "Untitled"} {question.points}
                     </p>
                     <label className="text-gray-400 text-xs">Type</label>
