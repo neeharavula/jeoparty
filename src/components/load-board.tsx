@@ -34,7 +34,7 @@ function LoadBoard({
     <MotionConfig transition={transition}>
       <div ref={containerRef} className="flex flex-col items-center gap-1">
         <motion.div
-          animate={{ width: isOpen ? 220 : 145 }}
+          animate={{ width: isOpen ? 220 : "auto" }}
           initial={false}
           className={`overflow-hidden rounded-[10px] shadow-sm ${
             isOpen
@@ -45,7 +45,7 @@ function LoadBoard({
           {!isOpen ? (
             <button
               type="button"
-              className="flex w-full items-center justify-center p-2 text-white cursor-pointer font-mono text-base"
+              className="flex w-full items-center justify-center px-4 py-2 text-white cursor-pointer font-mono text-sm"
               onClick={() => setIsOpen(true)}
             >
               Load Board

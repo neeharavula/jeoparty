@@ -332,7 +332,7 @@ function SetupPage() {
       </div>
 
       <div className="hidden lg:flex min-h-screen relative flex-col">
-      <h1 ref={headerRef} className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
+      <h1 ref={headerRef} className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
       {editHintTop !== null && (
         <label
           className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--label-text)] text-xs font-mono uppercase whitespace-nowrap"
@@ -462,7 +462,7 @@ function SetupPage() {
                     )}
 
                     <button
-                      className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer"
+                      className="bg-[#6b93a6] text-white text-sm rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer mt-3"
                       onClick={() => setEditingQuestionId(null)}
                     >
                       Save
@@ -477,11 +477,11 @@ function SetupPage() {
 
       <div className="flex items-start gap-6 mt-6">
         <button
-          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono text-base"
+          className="bg-[#6b93a6] text-white rounded-[10px] px-4 py-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono text-sm"
           onClick={generateGame}
           disabled={isGenerating}
         >
-          {isGenerating ? "Generating..." : "Generate Game"}
+          Generate Game
         </button>
 
         <LoadBoard
@@ -493,7 +493,13 @@ function SetupPage() {
         />
       </div>
 
-      {gameLinks && (
+      {isGenerating && (
+        <p className="font-mono text-base text-[var(--text-h)]">
+          Generating...
+        </p>
+      )}
+
+      {!isGenerating && gameLinks && (
         <div className="flex gap-8 font-mono text-base">
           {(
             [

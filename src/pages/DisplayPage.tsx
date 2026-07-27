@@ -70,7 +70,7 @@ function DisplayPage() {
   if (game.status === "setup") {
     return (
       <div className="min-h-screen flex flex-col">
-        <h1 className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
+        <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-2">
           <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mb-2">
@@ -95,7 +95,7 @@ function DisplayPage() {
     <div>
       {game.status === "in_progress" && !game.current_question_id && (
         <div className="min-h-screen flex flex-col">
-          <h1 className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
+          <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
           <div className="flex-1 flex flex-col items-center justify-center gap-2">
             <Board categories={categories} size="full" />
           </div>
@@ -110,7 +110,7 @@ function DisplayPage() {
         (revealed.question.state === "revealed" ? (
           <div className="min-h-screen relative flex flex-col">
             <div ref={headerRef}>
-              <h1 className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">
+              <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">
                 Jeoparty
               </h1>
               <p className="text-center my-8 text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase">
@@ -138,7 +138,7 @@ function DisplayPage() {
           </div>
         ) : (
           <div className="min-h-screen flex flex-col">
-            <h1 className="text-center pt-4 m-0 text-4xl 2xl:text-6xl">
+            <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">
               Jeoparty
             </h1>
             <p className="text-center my-8 text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase">
