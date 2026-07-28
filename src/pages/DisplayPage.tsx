@@ -73,7 +73,7 @@ function DisplayPage() {
         <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl shrink-0">Jeoparty</h1>
 
         <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-2">
-          <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mb-12">
+          <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mb-16">
             Players ({players.length})
           </label>
           <AutoColumnList
