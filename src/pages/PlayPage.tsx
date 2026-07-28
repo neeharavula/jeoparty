@@ -38,8 +38,9 @@ function PlayPage() {
   useEffect(() => {
     const meta = document.querySelector('meta[name="theme-color"]');
 
-    const color =
-      revealed?.question.state === "answered"
+    const color = !player
+      ? "#a6c5d2"
+      : revealed?.question.state === "answered"
         ? getComputedStyle(document.documentElement)
             .getPropertyValue(
               mySubmission?.is_correct ? "--correct" : "--incorrect",
@@ -55,7 +56,7 @@ function PlayPage() {
       document.documentElement.style.backgroundColor = "";
       document.body.style.backgroundColor = "";
     };
-  }, [revealed?.question.state, mySubmission?.is_correct]);
+  }, [player, revealed?.question.state, mySubmission?.is_correct]);
 
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [freeTextInput, setFreeTextInput] = useState("");
@@ -123,11 +124,11 @@ function PlayPage() {
 
   if (!player) {
     return (
-      <div className="min-h-screen relative flex flex-col items-center justify-center gap-4">
+      <div className="min-h-dvh relative flex flex-col items-center justify-center gap-4 bg-[#a6c5d2]">
         <h1 className="absolute top-0 left-0 w-full text-center pt-4">
           Jeoparty
         </h1>
-        <div className="flex flex-col gap-3 bg-[#a6c5d2] p-5 rounded-[10px] shadow-sm text-small">
+        <div className="flex flex-col gap-3 bg-white p-5 rounded-[10px] shadow-sm text-small">
           <input
             className="bg-[#dcdcdc] rounded-[10px] p-2 font-mono text-center text-[var(--text-h)] placeholder:text-[var(--placeholder-text)]"
             value={name}
@@ -135,7 +136,7 @@ function PlayPage() {
             placeholder="Enter Name"
           />
           <button
-            className="bg-white rounded-[10px] p-2 w-full font-mono"
+            className="bg-[#6b93a6] text-white rounded-[10px] p-2 w-full font-mono"
             onClick={joinGame}
           >
             Join Game
