@@ -79,6 +79,7 @@ function Leaderboard({
           items={rest}
           getKey={(player) => player.id}
           maxColumns={5}
+          gap={32}
           renderItem={renderPlayer}
         />
       </div>
