@@ -219,14 +219,14 @@ function HostPage() {
 
   if (game.status === "setup") {
     return (
-      <div className="min-h-screen flex flex-col">
-        <h1 className="text-center pt-4">Jeoparty</h1>
-        <div className="flex flex-col items-center gap-4">
+      <div className="h-dvh flex flex-col overflow-hidden">
+        <h1 className="text-center pt-4 shrink-0">Jeoparty</h1>
+        <div className="flex flex-col items-center gap-4 shrink-0">
           <p className="text-center font-mono">Host Mode</p>
           <p className="text-center font-mono">Room Code: {roomCode}</p>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center gap-2">
+        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col items-center justify-center gap-2">
           <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
             Players
           </label>
@@ -243,7 +243,7 @@ function HostPage() {
         </div>
 
         <button
-          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono m-4"
+          className="bg-[#6b93a6] text-white rounded-[10px] p-2 shadow-sm transition-transform duration-300 ease-out hover:scale-95 cursor-pointer font-mono m-4 shrink-0"
           onClick={startGame}
         >
           Start Game
