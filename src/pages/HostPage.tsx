@@ -9,7 +9,6 @@ import { supabase } from "@/lib/supabaseClient";
 import { findRevealedQuestion } from "@/lib/board";
 import Board from "@/components/board";
 import Leaderboard from "@/components/leaderboard";
-import AutoColumnList from "@/components/auto-column-list";
 
 function HostPage() {
   const { roomCode } = useParams();
@@ -222,24 +221,23 @@ function HostPage() {
       <div className="h-dvh flex flex-col overflow-hidden">
         <h1 className="text-center pt-4 shrink-0">Jeoparty</h1>
         <div className="flex flex-col items-center gap-4 shrink-0">
-          <p className="text-center font-mono">Host Mode</p>
-          <p className="text-center font-mono">Room Code: {roomCode}</p>
+          <p className="text-center font-mono">Hosting Game: {roomCode}</p>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col items-center justify-center gap-2">
-          <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2">
-            Players
+        <div className="flex-1 min-h-0 flex flex-col items-center gap-2 pt-8 pb-6">
+          <label className="text-[var(--label-text)] text-sm font-mono uppercase mb-2 shrink-0">
+            Players ({players.length})
           </label>
-          <AutoColumnList
-            items={players}
-            getKey={(player) => player.id}
-            columnWidth={220}
-            renderItem={(player) => (
-              <p className="font-offbit text-3xl text-[var(--text-h)]">
+          <div className="flex-1 min-h-0 w-full overflow-y-auto flex flex-col items-center gap-2 py-4">
+            {players.map((player) => (
+              <p
+                key={player.id}
+                className="font-offbit text-3xl text-[var(--text-h)]"
+              >
                 {player.name}
               </p>
-            )}
-          />
+            ))}
+          </div>
         </div>
 
         <button
