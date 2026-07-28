@@ -139,21 +139,21 @@ function DisplayPage() {
             </div>
           </div>
         ) : (
-          <div className="min-h-screen flex flex-col">
-            <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">
+          <div className="h-screen flex flex-col overflow-hidden">
+            <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl shrink-0">
               Jeoparty
             </h1>
-            <p className="text-center my-8 text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase">
+            <p className="text-center my-8 text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase shrink-0">
               {revealed.category.name || "Untitled"} {revealed.question.points}
             </p>
-            <div className="flex-1 flex flex-col items-center justify-center gap-2 px-6 pb-12">
-              <h2 className="text-[56px] 2xl:text-[96px] text-center max-w-4xl 2xl:max-w-6xl">
+            <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-2 px-6 pb-12">
+              <h2 className="text-[56px] 2xl:text-[96px] text-center max-w-4xl 2xl:max-w-6xl shrink-0">
                 {revealed.question.prompt}
               </h2>
 
               {revealed.question.state === "judging" && (
                 <div className="w-full flex-1 min-h-0 flex flex-col items-center gap-2 mt-6">
-                  <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mb-4">
+                  <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mb-9 shrink-0">
                     Submissions
                   </label>
                   {submissions.length === 0 ? (
@@ -164,6 +164,7 @@ function DisplayPage() {
                     <AutoColumnList
                       items={submissions}
                       getKey={(submission) => submission.id}
+                      maxColumns={5}
                       renderItem={(submission) => (
                         <p className="font-offbit text-4xl 2xl:text-6xl text-[var(--text-h)]">
                           {playerName(submission.player_id)}:{" "}
@@ -173,7 +174,7 @@ function DisplayPage() {
                     />
                   )}
                   <div className="flex-1" />
-                  <p className="font-mono text-center text-[var(--text-h)] text-base 2xl:text-2xl">
+                  <p className="font-mono text-center text-[var(--text-h)] text-base 2xl:text-2xl shrink-0">
                     Host is judging 🧐 ...
                   </p>
                 </div>
