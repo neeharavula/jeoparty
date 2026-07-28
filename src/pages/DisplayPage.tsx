@@ -69,17 +69,19 @@ function DisplayPage() {
 
   if (game.status === "setup") {
     return (
-      <div className="min-h-screen flex flex-col">
-        <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl">Jeoparty</h1>
+      <div className="h-screen flex flex-col overflow-hidden">
+        <h1 className="text-center pt-10 m-0 text-4xl 2xl:text-6xl shrink-0">Jeoparty</h1>
 
-        <div className="flex-1 flex flex-col items-center justify-center gap-2">
-          <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mb-2">
-            Players
+        <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-2">
+          <label className="text-[var(--label-text)] text-sm 2xl:text-xl font-mono uppercase mb-12">
+            Players ({players.length})
           </label>
           <AutoColumnList
             items={players}
             getKey={(player) => player.id}
             columnWidth={220}
+            gap={40}
+            maxColumns={5}
             renderItem={(player) => (
               <p className="font-offbit text-3xl 2xl:text-5xl text-[var(--text-h)]">
                 {player.name}
