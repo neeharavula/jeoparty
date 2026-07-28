@@ -388,7 +388,9 @@ function HostPage() {
         </div>
       )}
 
-      {game.status === "complete" && <Leaderboard players={players} />}
+      {game.status === "complete" && (
+        <Leaderboard players={players} singleColumn />
+      )}
     </div>
   );
 }

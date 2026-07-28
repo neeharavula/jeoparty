@@ -331,7 +331,7 @@ function PlayPage() {
                 >
                   {mySubmission?.is_correct
                     ? "You got it!"
-                    : "Better luck next time ..."}
+                    : "Better luck next time."}
                 </p>
               </div>
             )}
@@ -339,7 +339,9 @@ function PlayPage() {
         </div>
       )}
 
-      {game.status === "complete" && <Leaderboard players={players} />}
+      {game.status === "complete" && (
+        <Leaderboard players={players} singleColumn />
+      )}
     </div>
   );
 }
